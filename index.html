@@ -115,9 +115,9 @@ textarea.inp{font-size:18px;font-weight:600;resize:none;min-height:120px;line-he
 .opt .tick{position:absolute;right:16px;top:50%;width:18px;height:18px;margin-top:-9px;opacity:0;transform:scale(.4);transition:opacity .2s,transform .25s cubic-bezier(.3,1.6,.5,1)}
 .opt.sel .tick{opacity:1;transform:scale(1)}
 
-.exs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:20px}
+.exs{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-top:20px}
 .ex{background:var(--card);border-radius:14px;padding:6px;overflow:hidden}
-.ex img{display:block;width:100%;height:150px;object-fit:cover;object-position:top;border-radius:10px}
+.ex img{display:block;width:100%;height:150px;object-fit:cover;object-position:center;border-radius:10px}
 .ex span{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);padding:6px 4px 2px}
 .upl{margin-top:16px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--accent);color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer;transition:transform .12s var(--ease)}
 .upl:active{transform:scale(.97)}
@@ -252,9 +252,9 @@ en:{
   q:{name:"What's your in-game name?", top:"Screenshot your Power Details", scroll:"Now scroll down and screenshot again",
      sq0:"Squad 1", sq1:"Squad 2", sq2:"Squad 3", sq4:"Got a 4th squad?", goal:"Your goal before S7, or what you need help with?", review:"All good?"},
   hint:{name:"Start typing, then tap your name.", top:"Tap the power icon next to your profile picture. Screenshot the top of the panel.",
-     scroll:"Scroll the same panel down until you see Unit, Tech and Overlord.", sq:"Open this squad and screenshot it, like the example.",
+     scroll:"Scroll the same panel down until you see Unit, Tech and Overlord.", sq:"Open Squad {n} and follow the examples: blue button at the bottom, then the details button. Screenshot that screen. The squad screen itself works too.",
      sq4:"Just a tick, no screenshot needed.", goal:"Short is fine. Leadership reads every answer.", review:"Check your numbers, then send."},
-  ex:{route:"Tap here", top:"Top of panel", scroll:"Scrolled down", squad:"Your squad"},
+  ex:{route:"Tap here", top:"Top of panel", scroll:"Scrolled down", squad:"Your squad", preset:"1. Tap this", details:"2. Then this", lineup:"3. Screenshot this"},
   upload:"Upload screenshot", again:"Use another screenshot", reading:"Reading your numbers…", manual:"Type them myself",
   readFail:"Couldn't read that one. Try another screenshot, or type the numbers.",
   checkTop:"These numbers don't add up. Double-check Hero Power.",
@@ -276,9 +276,9 @@ es:{
   q:{name:"¿Cuál es tu nombre en el juego?", top:"Haz captura de tus Detalles de Poder", scroll:"Ahora baja y haz otra captura",
      sq0:"Escuadrón 1", sq1:"Escuadrón 2", sq2:"Escuadrón 3", sq4:"¿Tienes 4.º escuadrón?", goal:"¿Tu meta antes de la S7, o en qué necesitas ayuda?", review:"¿Todo bien?"},
   hint:{name:"Empieza a escribir y toca tu nombre.", top:"Toca el ícono de poder junto a tu foto de perfil. Haz captura de la parte de arriba del panel.",
-     scroll:"Baja en el mismo panel hasta ver Unidades, Tecnología y Overlord.", sq:"Abre este escuadrón y haz captura, como en el ejemplo.",
+     scroll:"Baja en el mismo panel hasta ver Unidades, Tecnología y Overlord.", sq:"Abre el Escuadrón {n} y sigue los ejemplos: botón azul de abajo y luego el botón de detalles. Haz captura de esa pantalla. También sirve la pantalla del escuadrón.",
      sq4:"Solo marca, no hace falta captura.", goal:"Corto está bien. El liderazgo lee cada respuesta.", review:"Revisa tus números y mándalo."},
-  ex:{route:"Toca aquí", top:"Arriba del panel", scroll:"Más abajo", squad:"Tu escuadrón"},
+  ex:{route:"Toca aquí", top:"Arriba del panel", scroll:"Más abajo", squad:"Tu escuadrón", preset:"1. Toca aquí", details:"2. Luego aquí", lineup:"3. Captura esto"},
   upload:"Subir captura", again:"Usar otra captura", reading:"Leyendo tus números…", manual:"Escribirlos yo",
   readFail:"No se pudo leer. Prueba otra captura o escribe los números.",
   checkTop:"Estos números no cuadran. Revisa el Poder de héroes.",
@@ -300,9 +300,9 @@ pt:{
   q:{name:"Qual é o teu nome no jogo?", top:"Tira print dos teus Detalhes de Poder", scroll:"Agora desce e tira outro print",
      sq0:"Esquadrão 1", sq1:"Esquadrão 2", sq2:"Esquadrão 3", sq4:"Tem um 4º esquadrão?", goal:"Tua meta antes da S7, ou com o que precisa de ajuda?", review:"Tudo certo?"},
   hint:{name:"Começa a digitar e toca no teu nome.", top:"Toca no ícone de poder ao lado da tua foto de perfil. Tira print da parte de cima do painel.",
-     scroll:"Desce no mesmo painel até ver Unidades, Tecnologia e Overlord.", sq:"Abre esse esquadrão e tira print, igual ao exemplo.",
+     scroll:"Desce no mesmo painel até ver Unidades, Tecnologia e Overlord.", sq:"Abre o Esquadrão {n} e segue os exemplos: botão azul de baixo e depois o botão de detalhes. Tira print dessa tela. A tela do esquadrão também serve.",
      sq4:"Só marca, não precisa de print.", goal:"Pode ser curto. A liderança lê todas as respostas.", review:"Confere teus números e envia."},
-  ex:{route:"Toca aqui", top:"Topo do painel", scroll:"Mais abaixo", squad:"Teu esquadrão"},
+  ex:{route:"Toca aqui", top:"Topo do painel", scroll:"Mais abaixo", squad:"Teu esquadrão", preset:"1. Toca aqui", details:"2. Depois aqui", lineup:"3. Print disso"},
   upload:"Enviar print", again:"Usar outro print", reading:"Lendo teus números…", manual:"Digitar eu mesmo",
   readFail:"Não deu pra ler. Tenta outro print ou digita os números.",
   checkTop:"Esses números não batem. Confere o Poder dos heróis.",
@@ -324,9 +324,9 @@ ko:{
   q:{name:"게임 닉네임이 뭐야?", top:"전투력 상세 화면을 캡처해 줘", scroll:"이제 아래로 내려서 한 번 더 캡처해 줘",
      sq0:"1부대", sq1:"2부대", sq2:"3부대", sq4:"4부대 있어?", goal:"S7 전까지 목표, 또는 도움이 필요한 부분은?", review:"다 맞아?"},
   hint:{name:"입력하다가 네 이름을 눌러 줘.", top:"프로필 사진 옆 전투력 아이콘을 눌러. 패널 위쪽을 캡처해 줘.",
-     scroll:"같은 패널을 유닛, 기술, 오버로드가 보일 때까지 내려 줘.", sq:"이 부대를 열고 예시처럼 캡처해 줘.",
+     scroll:"같은 패널을 유닛, 기술, 오버로드가 보일 때까지 내려 줘.", sq:"{n}부대를 열고 예시처럼 아래 파란 버튼, 그다음 상세 보기 버튼을 눌러. 그 화면을 캡처해 줘. 부대 화면 캡처도 괜찮아.",
      sq4:"체크만 하면 돼, 캡처는 필요 없어.", goal:"짧아도 괜찮아. 운영진이 전부 읽어.", review:"숫자 확인하고 보내 줘."},
-  ex:{route:"여기 눌러", top:"패널 위쪽", scroll:"아래로 내린 화면", squad:"네 부대"},
+  ex:{route:"여기 눌러", top:"패널 위쪽", scroll:"아래로 내린 화면", squad:"네 부대", preset:"1. 여기 눌러", details:"2. 그다음 여기", lineup:"3. 이 화면 캡처"},
   upload:"캡처 올리기", again:"다른 캡처 쓰기", reading:"숫자 읽는 중…", manual:"직접 입력할게",
   readFail:"읽지 못했어. 다른 캡처를 올리거나 숫자를 직접 입력해 줘.",
   checkTop:"숫자가 안 맞아. 영웅 전투력을 다시 확인해 줘.",
@@ -580,7 +580,7 @@ function render(){
   }
   if (id === "sq0" || id === "sq1" || id === "sq2") {
     const n = Number(id[2]), q = a.squads[n];
-    body = exHTML([["ex/squad.jpg", T.ex.squad]]);
+    body = exHTML([["ex/preset.jpg", T.ex.preset], ["ex/details.jpg", T.ex.details], ["ex/lineup.jpg", T.ex.lineup]]);
     if (q.read === "reading") { body += `<div class="reading"><span class="spin"></span>${esc(T.reading)}</div>`; showBtn = false; }
     else {
       body += uploadHTML("file", q.read !== "idle");
@@ -613,7 +613,7 @@ function render(){
     btn = S.sending ? T.sending : T.send;
   }
 
-  const hint = id.startsWith("sq") && id !== "sq4" ? T.hint.sq : T.hint[id];
+  const hint = id.startsWith("sq") && id !== "sq4" ? T.hint.sq.replace("{n}", Number(id[2]) + 1) : T.hint[id];
   $app.innerHTML = `<main><section class="step ${anim}" id="stp">
     <div class="num">${S.i+1} / ${STEPS.length}</div>
     <h1>${esc(T.q[id])}</h1>
