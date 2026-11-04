@@ -197,7 +197,7 @@ const firebaseConfig = {
   messagingSenderId: "829337079274",
   appId: "1:829337079274:web:a65294bdf33ca6718af693"
 };
-const READER = "https://onda-reader.netlify.app/.netlify/functions/read";
+const READER = "https://onda-reader.onda1053.workers.dev";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, doc, getDocs, addDoc, setDoc, updateDoc, onSnapshot, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -300,10 +300,10 @@ async function shrink(file){
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
-    const w = Math.min(1000, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
+    const w = Math.min(800, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
     const c = document.createElement("canvas"); c.width = w; c.height = h;
     c.getContext("2d").drawImage(img, 0, 0, w, h);
-    return c.toDataURL("image/jpeg", 0.85);
+    return c.toDataURL("image/jpeg", 0.8);
   } finally { URL.revokeObjectURL(url); }
 }
 async function readShot(kind, file){
