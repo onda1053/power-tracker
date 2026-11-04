@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#EEF1F5">
+<meta name="robots" content="noindex">
+<title>ONDA Power Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2F333A; --ink-soft:#5F6670; --ink-faint:#98A0AA;
+  --bg:#EEF1F5; --paper:#F8FAFC; --card:#FFFFFF; --soft:#E3E8EF; --soft2:#D7DEE7;
+  --err:#B3261E; --errbg:#F6DEDC; --ok:#23784A; --okbg:#DCEFE3; --warn:#8A5A00; --warnbg:#FBEFD2;
+  --ease:cubic-bezier(.2,.75,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:8px}
+
+/* ---------- top: progress + raccoon + back ---------- */
+.top{position:fixed;top:0;left:0;right:0;z-index:5;background:var(--bg);padding-top:env(safe-area-inset-top)}
+.track{display:flex;gap:4px;padding:12px 14px 0}
+.seg{flex:1;height:7px;border-radius:4px;background:var(--soft2);transition:background .35s}
+.seg.done{background:var(--ink)}
+.seg.cur{background:var(--ink-faint)}
+.lane{position:relative;height:42px;margin:0 14px}
+.coon{position:absolute;top:4px;left:calc((100% - 60px - 32px) * var(--p));width:60px;height:33px;transition:left .7s var(--ease);transform:scaleY(-1)}
+.coon svg{display:block;width:60px;height:33px}
+.coon .fB{opacity:0}
+.coon.run .fA{animation:fa .16s steps(1) infinite}
+.coon.run .fB{animation:fb .16s steps(1) infinite}
+@keyframes fa{0%{opacity:1}50%{opacity:0}}
+@keyframes fb{0%{opacity:0}50%{opacity:1}}
+.heart{position:absolute;top:39px;left:calc((100% - 60px - 32px) * var(--p) + 37px);width:16px;height:14px;opacity:0;transform:scale(.2);transition:left .7s var(--ease),opacity .25s,transform .35s cubic-bezier(.3,1.6,.5,1)}
+.heart.on{opacity:1;transform:scale(1);transition-delay:0s,.85s,.85s}
+.heart svg{display:block;width:16px;height:14px;transform:scaleY(-1)}
+.sausage{position:absolute;right:0;top:14px;width:32px;height:13px;transition:transform .3s,opacity .3s}
+.sausage.gone{transform:scale(.2);opacity:0}
+.backrow{height:44px;padding:4px 14px 0}
+.backbtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px 0 10px;border-radius:10px;background:var(--soft);font-weight:700;font-size:14px;transition:transform .12s var(--ease)}
+.backbtn:active{transform:scale(.95)}
+.backbtn svg{width:18px;height:18px}
+
+/* ---------- form screens ---------- */
+main{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:150px 22px 64px}
+.step{width:100%;max-width:560px}
+.step.in{animation:in .42s var(--ease)}
+.step.inb{animation:inb .42s var(--ease)}
+@keyframes in{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes inb{from{opacity:0;transform:translateY(-28px)}to{opacity:1;transform:none}}
+.num{font-size:14px;font-weight:700;color:var(--ink-soft);margin-bottom:10px}
+h1{font-size:clamp(27px,6.8vw,38px);line-height:1.14;font-weight:800;letter-spacing:-.025em}
+.hint{margin-top:10px;font-size:15px;color:var(--ink-soft);line-height:1.45;font-weight:500}
+.field{margin-top:24px;position:relative}
+.inp{width:100%;border:0;background:var(--soft);border-radius:12px;padding:14px 16px;font-size:22px;font-weight:700;outline:none;transition:background .2s}
+.inp::placeholder{color:var(--ink-faint);font-weight:600}
+.inp:focus{background:var(--soft2)}
+textarea.inp{font-size:18px;font-weight:600;resize:none;min-height:120px;line-height:1.45}
+.err{margin-top:12px;font-size:15px;font-weight:700;color:var(--err);min-height:22px}
+.err.info{color:var(--ink-soft)}
+.shake{animation:shake .38s}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.actions{margin-top:18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.btn{background:var(--ink);color:#fff;border-radius:12px;padding:15px 28px;font-size:17px;font-weight:800;transition:transform .12s var(--ease),opacity .2s}
+.btn:active{transform:scale(.95)}
+.btn[disabled]{opacity:.45;cursor:default}
+.link{font-weight:700;font-size:15px;color:var(--ink-soft);padding:6px 2px;text-decoration:underline;text-underline-offset:3px}
+
+.sugs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;min-height:8px}
+.sug{background:var(--soft);border-radius:20px;padding:8px 14px;font-weight:700;font-size:15px;transition:transform .12s var(--ease),background .15s}
+.sug:active{transform:scale(.96)}
+.sug.on{background:var(--ink);color:#fff}
+
+.opts{margin-top:24px;display:grid;gap:10px}
+.opt{position:relative;display:flex;align-items:center;width:100%;text-align:left;background:var(--card);border-radius:12px;padding:16px 44px 16px 16px;font-size:17px;font-weight:700;transition:transform .12s var(--ease),background .15s}
+.opt:active{transform:scale(.98)}
+.opt.sel{background:var(--ink);color:#fff}
+.opt .tick{position:absolute;right:16px;top:50%;width:18px;height:18px;margin-top:-9px;opacity:0;transform:scale(.4);transition:opacity .2s,transform .25s cubic-bezier(.3,1.6,.5,1)}
+.opt.sel .tick{opacity:1;transform:scale(1)}
+
+.exs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:20px}
+.ex{background:var(--card);border-radius:14px;padding:6px;overflow:hidden}
+.ex img{display:block;width:100%;height:150px;object-fit:cover;object-position:top;border-radius:10px}
+.ex span{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);padding:6px 4px 2px}
+.upl{margin-top:16px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--ink);color:#fff;border-radius:14px;padding:17px;font-size:17px;font-weight:800;cursor:pointer;transition:transform .12s var(--ease)}
+.upl:active{transform:scale(.97)}
+.upl.again{background:var(--soft);color:var(--ink)}
+.upl svg{width:20px;height:20px}
+.reading{margin-top:18px;background:var(--card);border-radius:14px;padding:18px;font-weight:700;color:var(--ink-soft);display:flex;align-items:center;gap:12px}
+.spin{width:20px;height:20px;border-radius:50%;border:3px solid var(--soft2);border-top-color:var(--ink);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.vals{margin-top:16px;background:var(--card);border-radius:14px;padding:6px 14px}
+.vrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
+.vrow+.vrow{border-top:1px solid var(--soft)}
+.vrow label{font-size:15px;font-weight:700}
+.vrow input{width:58%;max-width:220px;text-align:right;border:0;background:var(--soft);border-radius:10px;padding:10px 12px;font-size:17px;font-weight:800;outline:none}
+.vrow input:focus{background:var(--soft2)}
+.vrow input.bad{background:var(--errbg);color:var(--err)}
+.note{margin-top:12px;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:700;line-height:1.4}
+.note.warn{background:var(--warnbg);color:var(--warn)}
+.note.good{background:var(--okbg);color:var(--ok)}
+.types{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.types .sug{font-size:14px}
+.tlabel{margin-top:16px;font-size:14px;font-weight:800;color:var(--ink-soft)}
+.rev{margin-top:20px;background:var(--card);border-radius:14px;padding:6px 16px}
+.rrow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;font-size:15px;font-weight:600}
+.rrow+.rrow{border-top:1px solid var(--soft)}
+.rrow b{font-weight:800;text-align:right;word-break:break-word}
+.zoom{position:fixed;inset:0;z-index:30;background:rgba(20,22,26,.86);display:flex;align-items:center;justify-content:center;padding:20px}
+.zoom img{max-width:100%;max-height:100%;border-radius:12px}
+.done h1{font-size:clamp(32px,8.5vw,46px)}
+
+/* ---------- R4 board ---------- */
+.board{max-width:720px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px 70px}
+.bhead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.bhead h1{font-size:24px}
+.iconbtn{width:42px;height:42px;border-radius:12px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px}
+.monthnav{display:flex;align-items:center;gap:6px;margin-top:14px}
+.monthnav b{font-size:16px;font-weight:800;min-width:150px;text-align:center}
+.monthnav button{width:36px;height:36px;border-radius:10px;background:var(--soft);font-weight:800}
+.monthnav button[disabled]{opacity:.35}
+.prog{margin-top:14px;background:var(--card);border-radius:14px;padding:14px 16px}
+.prog .ptop{display:flex;justify-content:space-between;align-items:baseline;font-weight:800}
+.prog .ptop span{font-size:22px}
+.prog .ptop button{font-size:13px;font-weight:800;color:var(--ink-soft);background:var(--soft);border-radius:16px;padding:6px 11px}
+.bar{margin-top:10px;height:8px;border-radius:5px;background:var(--soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ink);border-radius:5px;transition:width .5s var(--ease)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:16px;background:var(--soft);border-radius:12px;padding:4px}
+.tabs button{border-radius:9px;padding:10px 4px;font-weight:800;font-size:14px;color:var(--ink-soft)}
+.tabs button.on{background:var(--card);color:var(--ink)}
+.bands{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.bands button{border-radius:16px;padding:6px 12px;font-weight:700;font-size:13px;background:var(--soft);color:var(--ink-soft)}
+.bands button.on{background:var(--ink);color:#fff}
+.tabhint{margin-top:10px;font-size:13px;color:var(--ink-faint);font-weight:600}
+.list{margin-top:10px;background:var(--card);border-radius:14px;padding:4px 0}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 16px}
+.row+.row{border-top:1px solid var(--soft)}
+.row .rk{width:22px;font-size:13px;font-weight:800;color:var(--ink-faint)}
+.row .nm{flex:1;min-width:0;font-weight:700;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .vl{font-weight:800;font-size:16px;white-space:nowrap}
+.up{color:var(--ok)}.down{color:var(--err)}.flat{color:var(--ink-faint);font-weight:700!important;font-size:14px!important}
+.empty{padding:18px 16px;color:var(--ink-soft);font-weight:600;font-size:15px}
+.mhead{margin-top:16px}
+.mhead .nm{font-size:28px;font-weight:800;letter-spacing:-.02em;word-break:break-word}
+.mhead .meta{margin-top:4px;font-size:14px;font-weight:700;color:var(--ink-soft)}
+.big{margin-top:14px;background:var(--card);border-radius:14px;padding:16px}
+.big small{font-size:13px;font-weight:700;color:var(--ink-soft)}
+.big .v{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.big .d{font-size:15px;font-weight:800;margin-top:2px}
+.sect{margin-top:18px;font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em}
+.kv{margin-top:8px;background:var(--card);border-radius:14px;padding:2px 16px}
+.kv .r{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:11px 0;font-size:15px}
+.kv .r+.r{border-top:1px solid var(--soft)}
+.kv .r span{font-weight:600}
+.kv .r b{font-weight:800;text-align:right}
+.kv .r em{font-style:normal;font-weight:800;font-size:13px;min-width:70px;text-align:right}
+.goal{margin-top:8px;background:var(--card);border-radius:14px;padding:14px 16px;font-size:15px;font-weight:600;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.notes .n{padding:12px 0;font-size:15px;line-height:1.45;font-weight:600;white-space:pre-wrap;word-break:break-word}
+.notes .n+.n{border-top:1px solid var(--soft)}
+.notes .n small{display:block;font-size:12px;color:var(--ink-faint);font-weight:700;margin-bottom:2px}
+.notebox{margin-top:8px}
+.notebox textarea{width:100%;min-height:80px;border:0;border-radius:12px;background:var(--card);padding:12px 14px;font-size:15px;font-weight:600;line-height:1.4;resize:vertical;outline:none}
+.sbtn{background:var(--ink);color:#fff;border-radius:10px;padding:10px 16px;font-weight:800;font-size:14px}
+.sbtn.ghost{background:var(--soft);color:var(--ink)}
+.sbtn.red{background:var(--errbg);color:var(--err)}
+.rowbtns{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.sheet{position:fixed;inset:0;z-index:25;background:rgba(20,22,26,.4);display:flex;align-items:flex-end;justify-content:center}
+.sheet .pane{width:100%;max-width:520px;background:var(--paper);border-radius:20px 20px 0 0;padding:14px 16px calc(20px + env(safe-area-inset-bottom))}
+.sheet .pane button{display:block;width:100%;text-align:left;padding:15px 14px;border-radius:12px;font-weight:800;font-size:16px}
+.sheet .pane button:active{background:var(--soft)}
+.addrow{display:flex;gap:8px;margin-top:10px}
+.addrow input{flex:1;min-width:0;border:0;border-radius:12px;background:var(--card);padding:12px 14px;font-size:16px;font-weight:700;outline:none}
+.edit input{width:100%;border:0;border-radius:10px;background:var(--soft);padding:10px 12px;font-size:16px;font-weight:700;outline:none}
+.tag{display:inline-block;font-size:12px;font-weight:800;padding:3px 8px;border-radius:6px;background:var(--warnbg);color:var(--warn);margin-left:6px;vertical-align:middle}
+.login{max-width:400px;margin:0 auto;padding:110px 22px}
+.login .inp{font-size:18px;margin-top:14px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;font-size:14px;z-index:40;max-width:90vw}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="top"></div>
+<div id="app"></div>
+
+<script type="module">
+/* ============================ SETUP ============================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyCA6GfBB56P31KMLjVYQDnKjvonjDmsiGk",
+  authDomain: "onda-power.firebaseapp.com",
+  projectId: "onda-power",
+  storageBucket: "onda-power.firebasestorage.app",
+  messagingSenderId: "829337079274",
+  appId: "1:829337079274:web:a65294bdf33ca6718af693"
+};
+const READER = "https://onda-reader.netlify.app/.netlify/functions/read";
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, doc, getDocs, addDoc, setDoc, updateDoc, onSnapshot, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+const DRAFT_KEY = "onda_power_draft_v1";
+
+const SEED = ["Roo Hefner", "Ex Nihilo", "Beefy Lea", "Beefy Leo", "Beefy MK", "Sjoerd91", "YS0reset", "Beefy MaXYandel", "Beefy VRAU", "MedusAnge1410", "Tazzzsonofleanihi", "MEL", "Jefferson", "MąVi", "Falkeen", "Red Eyess", "Beefy pompey Roo", "Leo Toystory", "Badjak", "I m The Joker", "DB007", "GondorPPP", "DΛDDY", "D3fect", "Naughty Nausti", "Yaminn", "Messidios", "Ythô", "SMoorf", "Deetrader", "BuckeyesfanAinz", "ARCHIE", "D Quintal", "이불꽃사나이SK", "Mario A García", "Kingdoon", "MadMaxVer", "HENRIQUE", "NoDIDDY", "Jimbo dude", "SUZENA", "Rob18650", "NattyNàt", "Mr Smooth Haj", "reproc", "Mol1976", "pipeer", "Abdurhman22", "beto", "Lowieke007", "Softpaws", "WarPapa", "MAJOR BrADMIRAL", "2P神", "BLACKB3TTY", "Samuel Maccari", "DOliveira RJ", "Gabiiyy", "나비손조nabi", "Madame Shana", "Bill", "Og Roo", "FURIOSa", "Wayfind3r", "PEPE817", "DrGonzoxxx", "CDTulu", "JPM85", "JOHN X", "Gabanna11", "Moismee", "Beefy Nihi", "Pioneer Juan", "AlphaSwe", "ChenteCop3", "준 JUN", "Jaශi", "Fram Harrison", "Not smiley", "AzoOz·M", "SUEVEN", "Beefynho Paulo", "G8Ghosttown", "내성격깔끔 EJ", "Lygrit", "Yumyuyum", "ElMuddy", "Jobip", "RICOCASE", "Capitancavernícola", "Cpt Happy Mann", "2 Wycked", "INNOCENT", "Lord Karnage", "Graceegrx", "Father Armann", "v1mes", "Yeroka", "Il Señor Wick"];
+
+/* ============================ TEXTS ============================ */
+const T = {
+  back:"Back", ok:"OK", next:"Next", send:"Send it",
+  title:"ONDA Power Check",
+  q:{
+    name:"What's your in-game name?",
+    top:"Screenshot your Power Details",
+    scroll:"Now scroll down and screenshot again",
+    sq0:"Squad 1", sq1:"Squad 2", sq2:"Squad 3",
+    sq4:"Got a 4th squad?",
+    goal:"Your goal before S7, or what you need help with?",
+    review:"All good?"
+  },
+  hint:{
+    name:"Start typing, then tap your name.",
+    top:"Tap the power icon next to your profile picture. Screenshot the top of the panel.",
+    scroll:"Scroll the same panel down until you see Unit, Tech and Overlord.",
+    sq:"Open this squad and screenshot it, like the example.",
+    sq4:"Just a tick, no screenshot needed.",
+    goal:"Short is fine. Leadership reads every answer.",
+    review:"Check your numbers, then send."
+  },
+  ex:{route:"Tap here", top:"Top of panel", scroll:"Scrolled down", squad:"Your squad"},
+  upload:"Upload screenshot", again:"Use another screenshot", reading:"Reading your numbers…",
+  manual:"Type them myself",
+  readFail:"Couldn't read that one. Try another screenshot, or type the numbers.",
+  checkTop:"These numbers don't add up. Double-check Hero Power.",
+  checkAll:"These numbers don't add up with your total power. Double-check them.",
+  checkOk:"Numbers check out 👌",
+  wrongSquad:"This looks like Squad {n}. Sure it's the right one?",
+  f:{thp:"Hero Power (THP)",gear:"Gear",exWeapon:"Exclusive Weapon",heroSkill:"Hero Skill",drone:"Drone Power",unit:"Unit Power",tech:"Tech Power",overlord:"Overlord",power:"Squad power",total:"Total power"},
+  typeQ:"Squad type",
+  types:{tank:"Tank",air:"Air",missile:"Missile",tank41:"Tank 4+1",air41:"Air 4+1",missile41:"Missile 4+1",mix:"Mix"},
+  yesNo:["Yes","No"],
+  ph:{name:"Your name…",goal:"e.g. Push drone to 200, need help with tech"},
+  e:{req:"Fill this in first",nums:"Fill in all the numbers",bad:"That number looks off",type:"Pick the squad type",notlisted:"Not on our list. Check the spelling, or tap OK again to send anyway.",squad:"Squad power looks off. Type it like 62.28"},
+  sending:"Sending…", fail:"Didn't go through. Try again?",
+  done:"Got it, thanks 🙌", doneSub:"See you next month. Keep growing!"
+};
+
+/* ============================ HELPERS ============================ */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtN = n => (n == null || isNaN(n)) ? "" : Math.round(n).toLocaleString("en-US");
+const fmtM = n => (n == null || isNaN(n)) ? "–" : (Math.abs(n) >= 1e9 ? (n/1e9).toFixed(2) + "B" : (n/1e6).toFixed(2) + "M");
+const fmtD = n => (n > 0 ? "+" : n < 0 ? "−" : "") + fmtM(Math.abs(n));
+const fmtP = p => (p > 0 ? "+" : p < 0 ? "−" : "") + Math.abs(p*100).toFixed(1) + "%";
+const parseFull = raw => { const d = String(raw ?? "").replace(/[^0-9]/g, ""); return d ? Number(d) : null; };
+function parseSquad(raw){
+  let s = String(raw ?? "").trim().replace(/\s+/g, "").replace(/[mM]$/, "");
+  if (!s) return null;
+  if (/^\d{1,3}([.,]\d{3}){2,}$/.test(s) || /^\d{7,}$/.test(s)) return Number(s.replace(/[.,]/g, ""));
+  const v = Number(s.replace(",", "."));
+  return isFinite(v) && v > 0 && v < 2000 ? Math.round(v * 1e6) : NaN;
+}
+const norm = s => String(s || "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
+  .replace(/ð/g,"d").replace(/λ/g,"a").replace(/0/g,"o").replace(/[^\p{L}\p{N}]/gu, "");
+const monthOf = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+const monthName = m => { const [y,mo] = m.split("-").map(Number); return new Date(y, mo-1, 1).toLocaleString("en-US", {month:"long", year:"numeric"}); };
+const shiftMonth = (m, k) => { const [y,mo] = m.split("-").map(Number); return monthOf(new Date(y, mo-1+k, 1)); };
+function toast(msg){ const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
+function typeOf(arr){
+  const c = {tank:0, air:0, missile:0};
+  (arr || []).forEach(t => { if (c[t] != null) c[t]++; });
+  const top = Object.entries(c).sort((a,b) => b[1]-a[1])[0];
+  if (top[1] === 5) return top[0];
+  if (top[1] === 4) return top[0] + "41";
+  if ((arr || []).filter(Boolean).length >= 4) return "mix";
+  return null;
+}
+const TICK = `<svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+const CAM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>`;
+
+/* ============================ RACCOON ============================ */
+const PAL = {k:"#2B2B2B",g:"#8C8C8C",d:"#5C5C5C",w:"#F4F4F4"};
+const BODY = ["............kk..kk..","...........gggggggg.","..........gkkkgkkkg.","kk........gkwkgkwkgg","kkgg.....ggwwwwwwggk","..kkgg.gggggggggggg.","....kkgggggggggggg..","......gggggggggggg..","......dggggggggggd.."];
+const LEGS_A = ["......d.d.....d.d...",".....d...d...d...d.."];
+const LEGS_B = [".......dd.....dd....",".......dd.....dd...."];
+const pix = (rows, pal, y0=0) => rows.map((r,y) => [...r].map((c,x) => pal[c] ? `<rect x="${x}" y="${y+y0}" width="1" height="1" fill="${pal[c]}"/>` : "").join("")).join("");
+const COON_SVG = `<svg viewBox="0 0 20 11" shape-rendering="crispEdges" aria-hidden="true">${pix(BODY,PAL)}<g class="fA">${pix(LEGS_A,PAL,9)}</g><g class="fB">${pix(LEGS_B,PAL,9)}</g></svg>`;
+const SAUS_SVG = `<svg viewBox="0 0 10 4" width="32" height="13" shape-rendering="crispEdges" aria-hidden="true">${pix(["..rrrrrr..",".rRRRRRRr.","trRRRRRRrt",".rrrrrrrr."],{r:"#9C3F25",R:"#CF5E37",t:"#C9A27A"})}</svg>`;
+const HEART_SVG = `<svg viewBox="0 0 7 6" shape-rendering="crispEdges" aria-hidden="true">${pix([".rr.rr.","rwrrrrr","rrrrrrr",".rrrrr.","..rrr..","...r..."],{r:"#E0465A",w:"#FFFFFF"})}</svg>`;
+
+const $app = document.getElementById("app");
+const $top = document.getElementById("top");
+
+/* ============================ SCREENSHOT READER ============================ */
+async function shrink(file){
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const w = Math.min(1000, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    c.getContext("2d").drawImage(img, 0, 0, w, h);
+    return c.toDataURL("image/jpeg", 0.85);
+  } finally { URL.revokeObjectURL(url); }
+}
+async function readShot(kind, file){
+  const image = await shrink(file);
+  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 40000);
+  try {
+    const r = await fetch(READER, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({kind, image}), signal:ctl.signal});
+    if (!r.ok) throw new Error("reader " + r.status);
+    return await r.json();
+  } finally { clearTimeout(tm); }
+}
+const posInt = v => (typeof v === "number" && isFinite(v) && v >= 0) ? Math.round(v) : (typeof v === "string" ? parseFull(v) : null);
+
+/* ============================ MEMBER FORM ============================ */
+const STEPS = ["name","top","scroll","sq0","sq1","sq2","sq4","goal","review"];
+const FIELDS_TOP = ["thp","gear","exWeapon","heroSkill","drone"];
+const FIELDS_SCROLL = ["unit","tech","overlord"];
+const TYPES = ["tank","air","missile","tank41","air41","missile41","mix"];
+
+const blankA = () => ({
+  name:"", key:null,
+  v:{thp:null,gear:null,exWeapon:null,heroSkill:null,drone:null,unit:null,tech:null,overlord:null,total:null,building:null,tactics:null},
+  heroParts:null, st:{top:"idle", scroll:"idle"},
+  squads:[0,1,2].map(() => ({power:null, type:null, read:"idle", seen:null})),
+  squad4:null, goal:""
+});
+const S = { i:0, dir:1, roster:[], a:blankA(), sending:false, notListedOk:false };
+
+function saveDraft(){ try { localStorage.setItem(DRAFT_KEY, JSON.stringify({i:S.i, a:S.a, t:Date.now()})); } catch(_){} }
+function loadDraft(){
+  try {
+    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
+    if (d && d.a && Date.now() - d.t < 3*864e5) {
+      S.a = Object.assign(blankA(), d.a);
+      ["top","scroll"].forEach(k => { if (S.a.st[k] === "reading") S.a.st[k] = "idle"; });
+      S.a.squads.forEach(q => { if (q.read === "reading") q.read = "idle"; });
+      S.i = Math.min(Math.max(0, d.i|0), STEPS.length - 1);
+    }
+  } catch(_){}
+}
+function clearDraft(){ try { localStorage.removeItem(DRAFT_KEY); } catch(_){} }
+
+let runTimer = null;
+function drawTop(p, finished, showBack){
+  if (!$top.querySelector(".track")) {
+    $top.className = "top";
+    $top.innerHTML = `<div class="track">${STEPS.map(() => `<span class="seg"></span>`).join("")}</div>
+      <div class="lane"><div class="heart">${HEART_SVG}</div><div class="coon">${COON_SVG}</div><div class="sausage">${SAUS_SVG}</div></div>
+      <div class="backrow"></div>`;
+  }
+  $top.style.setProperty("--p", p);
+  const doneN = Math.round(p * STEPS.length);
+  $top.querySelectorAll(".seg").forEach((el,k) => { el.classList.toggle("done", k < doneN); el.classList.toggle("cur", k === doneN && !finished); });
+  const coon = $top.querySelector(".coon");
+  coon.classList.add("run"); clearTimeout(runTimer); runTimer = setTimeout(() => coon.classList.remove("run"), 720);
+  $top.querySelector(".sausage").classList.toggle("gone", !!finished);
+  $top.querySelector(".heart").classList.toggle("on", !!finished);
+  const row = $top.querySelector(".backrow");
+  row.innerHTML = showBack ? `<button class="backbtn" id="bk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>${esc(T.back)}</button>` : "";
+  const bk = row.querySelector("#bk"); if (bk) bk.onclick = () => go(S.i - 1, -1);
+}
+
+function go(i, dir){ S.i = Math.max(0, Math.min(STEPS.length, i)); S.dir = dir; S.notListedOk = false; saveDraft(); render(); window.scrollTo(0, 0); }
+function fail(msg){ const er = document.getElementById("er"); er.className = "err"; er.textContent = msg; const s = document.getElementById("stp"); s.classList.remove("shake"); void s.offsetWidth; s.classList.add("shake"); }
+
+function exHTML(items){ return `<div class="exs">${items.map(([src, cap]) => `<button class="ex" data-zoom="${src}"><img src="${src}" alt="${esc(cap)}" loading="lazy"><span>${esc(cap)}</span></button>`).join("")}</div>`; }
+function uploadHTML(id, again){ return `<label class="upl ${again ? "again" : ""}">${CAM}${esc(again ? T.again : T.upload)}<input type="file" accept="image/*" id="${id}" hidden></label>`; }
+function valsHTML(keys){
+  return `<div class="vals">${keys.map(k => `<div class="vrow"><label for="f_${k}">${esc(T.f[k])}</label><input id="f_${k}" data-f="${k}" inputmode="numeric" autocomplete="off" value="${esc(fmtN(S.a.v[k]))}" placeholder="0"></div>`).join("")}</div>`;
+}
+
+function topCheck(){
+  const a = S.a, p = a.heroParts;
+  if (!p || p.length < 6 || a.v.thp == null) return null;
+  const sum = p.reduce((x,y) => x + (y||0), 0);
+  return Math.abs(sum - a.v.thp) <= 2;
+}
+function allCheck(){
+  const v = S.a.v, parts = [v.thp, v.drone, v.building, v.unit, v.tech, v.overlord, v.tactics];
+  if (v.total == null || parts.some(x => x == null)) return null;
+  return Math.abs(parts.reduce((x,y) => x+y, 0) - v.total) <= 5;
+}
+
+function render(){
+  document.title = T.title;
+  const anim = S.dir < 0 ? "inb" : S.dir > 0 ? "in" : "";
+  const a = S.a;
+
+  if (S.i >= STEPS.length) {
+    drawTop(1, true, false);
+    $app.innerHTML = `<main><section class="step done in"><h1>${esc(T.done)}</h1><p class="hint">${esc(T.doneSub)}</p></section></main>`;
+    return;
+  }
+  const id = STEPS[S.i];
+  drawTop(S.i / STEPS.length, false, S.i > 0);
+  let body = "", btn = T.ok, showBtn = true, extra = "";
+
+  if (id === "name") {
+    body = `<div class="field"><input class="inp" id="nm" maxlength="40" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${esc(T.ph.name)}" value="${esc(a.name)}"></div><div class="sugs" id="sugs"></div>`;
+  }
+  if (id === "top" || id === "scroll") {
+    const st = a.st[id], keys = id === "top" ? FIELDS_TOP : FIELDS_SCROLL;
+    body = id === "top" ? exHTML([["ex/route.jpg", T.ex.route], ["ex/power-top.jpg", T.ex.top]]) : exHTML([["ex/power-scroll.jpg", T.ex.scroll]]);
+    if (st === "reading") { body += `<div class="reading"><span class="spin"></span>${esc(T.reading)}</div>`; showBtn = false; }
+    else {
+      body += uploadHTML("file", st !== "idle");
+      if (st === "idle") { extra = `<button class="link" id="man">${esc(T.manual)}</button>`; showBtn = false; }
+      else {
+        if (st === "fail") body += `<div class="note warn">${esc(T.readFail)}</div>`;
+        body += valsHTML(keys);
+        const ck = id === "top" ? topCheck() : allCheck();
+        if (ck === false) body += `<div class="note warn">${esc(id === "top" ? T.checkTop : T.checkAll)}</div>`;
+        if (ck === true) body += `<div class="note good">${esc(T.checkOk)}</div>`;
+      }
+    }
+  }
+  if (id === "sq0" || id === "sq1" || id === "sq2") {
+    const n = Number(id[2]), q = a.squads[n];
+    body = exHTML([["ex/squad.jpg", T.ex.squad]]);
+    if (q.read === "reading") { body += `<div class="reading"><span class="spin"></span>${esc(T.reading)}</div>`; showBtn = false; }
+    else {
+      body += uploadHTML("file", q.read !== "idle");
+      if (q.read === "idle") { extra = `<button class="link" id="man">${esc(T.manual)}</button>`; showBtn = false; }
+      else {
+        if (q.read === "fail") body += `<div class="note warn">${esc(T.readFail)}</div>`;
+        if (q.seen && q.seen !== n + 1) body += `<div class="note warn">${esc(T.wrongSquad.replace("{n}", q.seen))}</div>`;
+        body += `<div class="vals"><div class="vrow"><label for="sqp">${esc(T.f.power)}</label><input id="sqp" inputmode="decimal" autocomplete="off" value="${q.power != null ? esc((q.power/1e6).toFixed(2)) + "M" : ""}" placeholder="62.28M"></div></div>
+          <div class="tlabel">${esc(T.typeQ)}</div>
+          <div class="types">${TYPES.map(t => `<button class="sug ${q.type === t ? "on" : ""}" data-type="${t}">${esc(T.types[t])}</button>`).join("")}</div>`;
+      }
+    }
+  }
+  if (id === "sq4") {
+    body = `<div class="opts">${["yes","no"].map((k,j) => `<button class="opt ${a.squad4 === (k === "yes") ? "sel" : ""}" data-s4="${k}">${esc(T.yesNo[j])}${TICK}</button>`).join("")}</div>`;
+    showBtn = false;
+  }
+  if (id === "goal") {
+    body = `<div class="field"><textarea class="inp" id="gl" maxlength="600" placeholder="${esc(T.ph.goal)}">${esc(a.goal)}</textarea></div>`;
+  }
+  if (id === "review") {
+    const rows = [
+      ["Name", a.name],
+      ...FIELDS_TOP.concat(FIELDS_SCROLL).map(k => [T.f[k], fmtN(a.v[k])]),
+      ...a.squads.map((q,n) => [`Squad ${n+1}`, `${fmtM(q.power)} · ${T.types[q.type] || "?"}`]),
+      ["4th squad", a.squad4 ? T.yesNo[0] : T.yesNo[1]],
+      ["Goal", a.goal]
+    ];
+    body = `<div class="rev">${rows.map(([k,v]) => `<div class="rrow"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("")}</div>`;
+    btn = S.sending ? T.sending : T.send;
+  }
+
+  const hint = id.startsWith("sq") && id !== "sq4" ? T.hint.sq : T.hint[id];
+  $app.innerHTML = `<main><section class="step ${anim}" id="stp">
+    <div class="num">${S.i+1} / ${STEPS.length}</div>
+    <h1>${esc(T.q[id])}</h1>
+    ${hint ? `<p class="hint">${esc(hint)}</p>` : ""}
+    ${body}
+    <div class="err" id="er" role="alert"></div>
+    <div class="actions">
+      ${showBtn ? `<button class="btn" id="ok" ${S.sending ? "disabled" : ""}>${esc(btn)}</button>` : ""}
+      ${extra}
+    </div>
+  </section></main>`;
+  wire(id);
+}
+
+function wire(id){
+  const a = S.a;
+  $app.querySelectorAll("[data-zoom]").forEach(b => b.onclick = () => {
+    const z = document.createElement("div"); z.className = "zoom"; z.innerHTML = `<img src="${b.dataset.zoom}" alt="">`;
+    z.onclick = () => z.remove(); document.body.appendChild(z);
+  });
+  const ok = document.getElementById("ok"); if (ok) ok.onclick = next;
+  const man = document.getElementById("man");
+
+  if (id === "name") {
+    const nm = document.getElementById("nm"), box = document.getElementById("sugs");
+    const draw = () => {
+      const q = norm(nm.value);
+      if (!q) { box.innerHTML = ""; return; }
+      const hits = S.roster.map(r => ({r, n:norm(r.name)}))
+        .filter(x => x.n.includes(q) || q.includes(x.n))
+        .sort((x,y) => (y.n.startsWith(q) - x.n.startsWith(q)) || (x.n.length - y.n.length))
+        .slice(0, 6);
+      box.innerHTML = hits.map(x => `<button class="sug ${a.key === x.r.id ? "on" : ""}" data-k="${x.r.id}">${esc(x.r.name)}</button>`).join("");
+      box.querySelectorAll("[data-k]").forEach(b => b.onclick = () => {
+        const r = S.roster.find(r => r.id === b.dataset.k); a.name = r.name; a.key = r.id; nm.value = r.name; saveDraft(); draw();
+        setTimeout(() => next(), 180);
+      });
+    };
+    nm.addEventListener("input", () => { a.name = nm.value; a.key = null; S.notListedOk = false; document.getElementById("er").textContent = ""; saveDraft(); draw(); });
+    nm.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); next(); } });
+    draw();
+    if (!a.name) setTimeout(() => { try { nm.focus({preventScroll:true}); } catch(_){} }, 80);
+  }
+
+  if (id === "top" || id === "scroll") {
+    const f = document.getElementById("file");
+    if (f) f.onchange = async () => {
+      const file = f.files && f.files[0]; if (!file) return;
+      a.st[id] = "reading"; render();
+      try {
+        const r = await readShot("power", file);
+        const s = r.sections || {};
+        const map = {hero:"thp", drone:"drone", building:"building", unit:"unit", tech:"tech", overlord:"overlord", tactics:"tactics"};
+        Object.entries(map).forEach(([from, to]) => { const n = posInt(s[from]); if (n != null) a.v[to] = n; });
+        const tot = posInt(r.total); if (tot != null) a.v.total = tot;
+        if (Array.isArray(r.hero_parts) && r.hero_parts.length >= 6) {
+          const hp = r.hero_parts.map(posInt);
+          a.heroParts = hp;
+          if (hp[2] != null) a.v.gear = hp[2];
+          if (hp[3] != null) a.v.exWeapon = hp[3];
+          if (hp[5] != null) a.v.heroSkill = hp[5];
+        }
+        const keys = id === "top" ? FIELDS_TOP : FIELDS_SCROLL;
+        a.st[id] = keys.some(k => a.v[k] == null) ? "fail" : "done";
+      } catch(_) { a.st[id] = "fail"; }
+      saveDraft(); render();
+    };
+    if (man) man.onclick = () => { a.st[id] = "manual"; saveDraft(); render(); };
+    $app.querySelectorAll("[data-f]").forEach(inp => {
+      inp.addEventListener("input", () => { a.v[inp.dataset.f] = parseFull(inp.value); inp.classList.remove("bad"); if (inp.dataset.f === "thp") a.heroParts = null; saveDraft(); });
+      inp.addEventListener("blur", () => { inp.value = fmtN(a.v[inp.dataset.f]); });
+    });
+  }
+
+  if (id === "sq0" || id === "sq1" || id === "sq2") {
+    const n = Number(id[2]), q = a.squads[n];
+    const f = document.getElementById("file");
+    if (f) f.onchange = async () => {
+      const file = f.files && f.files[0]; if (!file) return;
+      q.read = "reading"; render();
+      try {
+        const r = await readShot("squad", file);
+        const p = posInt(r.power); if (p != null && p > 0) q.power = p;
+        q.seen = posInt(r.squad_no) || null;
+        const t = typeOf(Array.isArray(r.types) ? r.types : []); if (t) q.type = t;
+        q.read = (q.power != null && q.type) ? "done" : "fail";
+      } catch(_) { q.read = "fail"; }
+      saveDraft(); render();
+    };
+    if (man) man.onclick = () => { q.read = "manual"; saveDraft(); render(); };
+    const sqp = document.getElementById("sqp");
+    if (sqp) sqp.addEventListener("input", () => { const v = parseSquad(sqp.value); q.power = (v == null || isNaN(v)) ? null : v; saveDraft(); });
+    $app.querySelectorAll("[data-type]").forEach(b => b.onclick = () => {
+      q.type = b.dataset.type; saveDraft();
+      $app.querySelectorAll("[data-type]").forEach(x => x.classList.toggle("on", x === b));
+    });
+  }
+
+  if (id === "sq4") {
+    $app.querySelectorAll("[data-s4]").forEach(b => b.onclick = () => {
+      a.squad4 = b.dataset.s4 === "yes";
+      $app.querySelectorAll("[data-s4]").forEach(x => x.classList.toggle("sel", x === b));
+      saveDraft(); setTimeout(() => go(S.i + 1, 1), 260);
+    });
+  }
+
+  if (id === "goal") {
+    const gl = document.getElementById("gl");
+    gl.addEventListener("input", () => { a.goal = gl.value; saveDraft(); });
+  }
+}
+
+function next(){
+  const a = S.a, id = STEPS[S.i];
+  if (id === "name") {
+    if (!a.name.trim()) return fail(T.e.req);
+    if (!a.key) {
+      const exact = S.roster.find(r => norm(r.name) === norm(a.name));
+      if (exact) { a.key = exact.id; a.name = exact.name; }
+      else if (!S.notListedOk) { S.notListedOk = true; const er = document.getElementById("er"); er.className = "err info"; er.textContent = T.e.notlisted; return; }
+    }
+  }
+  if (id === "top" || id === "scroll") {
+    const keys = id === "top" ? FIELDS_TOP : FIELDS_SCROLL;
+    const missing = keys.filter(k => a.v[k] == null);
+    if (missing.length) { missing.forEach(k => document.getElementById("f_" + k)?.classList.add("bad")); return fail(T.e.nums); }
+    if (id === "top") {
+      const bad = (a.v.thp < 1e7 || a.v.thp > 3e9) ? ["thp"] : ["gear","exWeapon","heroSkill"].filter(k => a.v[k] >= a.v.thp);
+      if (bad.length) { bad.forEach(k => document.getElementById("f_" + k)?.classList.add("bad")); return fail(T.e.bad); }
+    }
+  }
+  if (id.startsWith("sq") && id !== "sq4") {
+    const q = a.squads[Number(id[2])];
+    if (q.power == null || q.power < 1e6 || q.power > 1e9) return fail(T.e.squad);
+    if (!q.type) return fail(T.e.type);
+  }
+  if (id === "goal" && !a.goal.trim()) return fail(T.e.req);
+  if (id === "review") return send();
+  go(S.i + 1, 1);
+}
+
+async function send(){
+  if (S.sending) return;
+  const a = S.a; S.sending = true; render();
+  const ck = allCheck();
+  const data = {
+    player: a.name.trim().slice(0, 40), playerKey: a.key || null,
+    month: monthOf(new Date()), submittedAt: serverTimestamp(),
+    thp: a.v.thp, gear: a.v.gear, exWeapon: a.v.exWeapon, heroSkill: a.v.heroSkill, drone: a.v.drone,
+    unit: a.v.unit, tech: a.v.tech, overlord: a.v.overlord, total: a.v.total ?? null,
+    squads: a.squads.map(q => ({power: q.power, type: q.type})),
+    squad4: !!a.squad4, goal: a.goal.trim().slice(0, 600),
+    check: ck === true ? "ok" : ck === false ? "off" : "unknown"
+  };
+  try {
+    await addDoc(collection(db, "entries"), data);
+    clearDraft(); S.sending = false; S.a = blankA(); go(STEPS.length, 1);
+  } catch(e) {
+    console.error(e); S.sending = false; render(); fail(T.fail);
+  }
+}
+
+async function startForm(){
+  loadDraft(); render();
+  try {
+    const snap = await getDocs(collection(db, "roster"));
+    S.roster = snap.docs.map(d => ({id:d.id, ...d.data()})).filter(r => r.active !== false && r.name);
+    if (STEPS[S.i] === "name") render();
+  } catch(e) { console.error(e); }
+}
+
+/* ============================ R4 BOARD ============================ */
+const FIELD_ROWS = [["thp","Hero Power (THP)"],["gear","Gear"],["exWeapon","Exclusive Weapon"],["heroSkill","Hero Skill"],["drone","Drone"],["unit","Unit"],["tech","Tech"],["overlord","Overlord"],["total","Total power"]];
+const B = { user:null, roster:[], entries:[], notes:[], month:monthOf(new Date()), view:"list", tab:"thp", band:"all", member:null, menu:false, editing:null, ready:{r:false,e:false,n:false} };
+
+const keyOf = e => e.playerKey || ("u:" + norm(e.player));
+const tsOf = e => (e.submittedAt && e.submittedAt.toMillis) ? e.submittedAt.toMillis() : 0;
+
+function model(){
+  // one entry per player per month: the latest submission
+  const per = new Map();
+  for (const e of B.entries) {
+    const k = keyOf(e), m = e.month;
+    if (!per.has(k)) per.set(k, new Map());
+    const mm = per.get(k);
+    if (!mm.has(m) || tsOf(e) > tsOf(mm.get(m))) mm.set(m, e);
+  }
+  return per;
+}
+function prevEntry(mm, month){
+  let best = null;
+  for (const [m, e] of mm) if (m < month && (!best || m > best.month)) best = e;
+  return best;
+}
+const grindOf = e => (e.unit != null && e.tech != null && e.drone != null) ? e.unit + e.tech + e.drone : null;
+function streakOf(mm, month){
+  let s = 0, m = month;
+  while (mm.has(m) && mm.has(shiftMonth(m, -1)) && mm.get(m).thp > mm.get(shiftMonth(m, -1)).thp) { s++; m = shiftMonth(m, -1); }
+  return s;
+}
+function rowsFor(per, month){
+  const rows = [];
+  for (const [k, mm] of per) {
+    const cur = mm.get(month); if (!cur) continue;
+    const prev = prevEntry(mm, month);
+    const ros = B.roster.find(r => r.id === k);
+    const g = grindOf(cur), gp = prev ? grindOf(prev) : null;
+    rows.push({
+      key:k, name: ros ? ros.name : cur.player, unmatched: !ros, cur, prev,
+      thpG: prev && prev.thp ? (cur.thp - prev.thp) / prev.thp : null,
+      grindG: (g != null && gp) ? (g - gp) / gp : null,
+      streak: streakOf(mm, month)
+    });
+  }
+  const byThp = [...rows].sort((a,b) => a.cur.thp - b.cur.thp);
+  byThp.forEach((r, i) => r.band = Math.min(2, Math.floor(i * 3 / byThp.length)));
+  return rows;
+}
+
+function boardTop(){ $top.className = ""; $top.innerHTML = ""; }
+
+function renderBoard(){
+  boardTop();
+  document.title = "ONDA Power · R4";
+  if (B.user === null) return renderLogin();
+  if (!B.ready.r || !B.ready.e) { $app.innerHTML = `<div class="board"><div class="empty">Loading…</div></div>`; return; }
+
+  const per = model(), rows = rowsFor(per, B.month);
+  const active = B.roster.filter(r => r.active !== false);
+  const doneKeys = new Set(rows.map(r => r.key));
+  const missing = active.filter(r => !doneKeys.has(r.id)).sort((a,b) => a.name.localeCompare(b.name));
+  const subm = active.length - missing.length;
+  const months = [...new Set(B.entries.map(e => e.month).concat([monthOf(new Date())]))].sort();
+  const mi = months.indexOf(B.month);
+
+  let html = `<div class="board">
+    <div class="bhead"><h1>Power Check</h1><button class="iconbtn" id="mn" aria-label="Menu">⋯</button></div>`;
+
+  if (B.view === "member") html += memberHTML(per, rows);
+  else if (B.view === "roster") html += rosterHTML(rows);
+  else {
+    html += `<div class="monthnav"><button id="pm" ${mi <= 0 ? "disabled" : ""}>‹</button><b>${esc(monthName(B.month))}</b><button id="nmx" ${mi >= months.length-1 ? "disabled" : ""}>›</button></div>
+      <div class="prog"><div class="ptop"><span>${subm}/${active.length} <small style="font-size:14px;color:var(--ink-soft)">submitted</small></span>
+      <button id="miss">${B.view === "missing" ? "Show growth" : `Not submitted · ${missing.length}`}</button></div>
+      <div class="bar"><i style="width:${active.length ? Math.round(subm*100/active.length) : 0}%"></i></div></div>`;
+    if (B.view === "missing") {
+      html += `<div class="list">${missing.length ? missing.map(r => `<div class="row"><span class="nm">${esc(r.name)}</span></div>`).join("") : `<div class="empty">Everyone's in 🎉</div>`}</div>`;
+    } else {
+      const tabs = [["thp","THP growth"],["grind","Grind growth"],["steady","Steady"]];
+      const hints = {thp:"Hero Power % since their last entry", grind:"Unit + Tech + Drone % since their last entry", steady:"Months in a row with THP growth"};
+      html += `<div class="tabs">${tabs.map(([k,l]) => `<button data-tab="${k}" class="${B.tab === k ? "on" : ""}">${l}</button>`).join("")}</div>
+        <div class="bands">${[["all","All"],[0,"Lower third"],[1,"Middle third"],[2,"Upper third"]].map(([k,l]) => `<button data-band="${k}" class="${String(B.band) === String(k) ? "on" : ""}">${l}</button>`).join("")}</div>
+        <div class="tabhint">${hints[B.tab]}</div>`;
+      let list = rows.filter(r => B.band === "all" || r.band === Number(B.band));
+      const val = r => B.tab === "thp" ? r.thpG : B.tab === "grind" ? r.grindG : r.streak;
+      list.sort((a,b) => (val(b) ?? -1e9) - (val(a) ?? -1e9) || b.cur.thp - a.cur.thp);
+      html += `<div class="list">${list.length ? list.map((r,i) => {
+        const v = val(r);
+        let cell;
+        if (B.tab === "steady") cell = v ? `<span class="vl">${v} mo</span>` : `<span class="vl flat">–</span>`;
+        else cell = v == null ? `<span class="vl flat">first entry</span>` : `<span class="vl ${v > 0 ? "up" : v < 0 ? "down" : ""}">${fmtP(v)}</span>`;
+        return `<button class="row" data-m="${esc(r.key)}"><span class="rk">${i+1}</span><span class="nm">${esc(r.name)}${r.unmatched ? `<span class="tag">new</span>` : ""}</span>${cell}</button>`;
+      }).join("") : `<div class="empty">No entries yet for this month.</div>`}</div>`;
+    }
+  }
+  html += `</div>`;
+  if (B.menu) html += `<div class="sheet" id="sh"><div class="pane">
+      <button id="m_roster">Roster</button><button id="m_export">Export all data (CSV)</button><button id="m_out">Sign out</button>
+    </div></div>`;
+  $app.innerHTML = html;
+  wireBoard(months, mi);
+}
+
+function memberHTML(per, rows){
+  const k = B.member, mm = per.get(k) || new Map();
+  const ros = B.roster.find(r => r.id === k);
+  const list = [...mm.values()].sort((a,b) => b.month.localeCompare(a.month));
+  const cur = mm.get(B.month) || list[0];
+  const name = ros ? ros.name : (cur ? cur.player : "?");
+  let h = `<div class="rowbtns"><button class="sbtn ghost" id="bk">‹ Back</button></div>`;
+  if (!cur) return h + `<div class="mhead"><div class="nm">${esc(name)}</div><div class="meta">No entries yet</div></div>` + notesHTML(k);
+  const prev = prevEntry(mm, cur.month);
+  const row = rows.find(r => r.key === k);
+  const bandName = row ? ["Lower third","Middle third","Upper third"][row.band] : "";
+  const d = (a, b) => (a != null && b != null) ? a - b : null;
+  const dd = x => x == null ? `<em class="flat">–</em>` : `<em class="${x > 0 ? "up" : x < 0 ? "down" : ""}">${fmtD(x)}</em>`;
+  const tg = prev && prev.thp ? (cur.thp - prev.thp) / prev.thp : null;
+  h += `<div class="mhead"><div class="nm">${esc(name)}</div><div class="meta">${esc(monthName(cur.month))}${bandName ? " · " + bandName : ""}${prev ? " · vs " + esc(monthName(prev.month)) : " · first entry"}</div></div>
+    <div class="big"><small>Hero Power (THP)</small><div class="v">${fmtM(cur.thp)}</div>${tg != null ? `<div class="d ${tg > 0 ? "up" : tg < 0 ? "down" : ""}">${fmtP(tg)} · ${fmtD(cur.thp - prev.thp)}</div>` : ""}</div>
+    <div class="sect">What changed</div>
+    <div class="kv">${FIELD_ROWS.slice(1).filter(([f]) => cur[f] != null).map(([f,l]) => `<div class="r"><span>${l}</span><b>${fmtM(cur[f])}</b>${prev ? dd(d(cur[f], prev[f])) : `<em></em>`}</div>`).join("")}</div>
+    <div class="sect">Squads</div>
+    <div class="kv">${(cur.squads || []).map((q,i) => `<div class="r"><span>Squad ${i+1} · ${esc(T.types[q.type] || "?")}</span><b>${fmtM(q.power)}</b>${prev && prev.squads ? dd(d(q.power, prev.squads[i]?.power)) : `<em></em>`}</div>`).join("")}
+      <div class="r"><span>4th squad</span><b>${cur.squad4 ? "Yes" : "No"}</b><em></em></div></div>
+    <div class="sect">Goal / help</div><div class="goal">${esc(cur.goal || "–")}</div>`;
+  if (list.length > 1) h += `<div class="sect">History</div><div class="kv">${list.map(e => `<div class="r"><span>${esc(monthName(e.month))}</span><b>${fmtM(e.thp)}</b><em></em></div>`).join("")}</div>`;
+  return h + notesHTML(k);
+}
+function notesHTML(k){
+  const ns = B.notes.filter(n => n.playerKey === k).sort((a,b) => tsOf(b) - tsOf(a));
+  return `<div class="sect">R4 notes</div>
+    ${ns.length ? `<div class="kv notes">${ns.map(n => `<div class="n"><small>${esc(n.at ? new Date(tsOf(n)).toLocaleDateString("en-GB") : "")}</small>${esc(n.text)}</div>`).join("")}</div>` : ""}
+    <div class="notebox"><textarea id="nt" maxlength="1000" placeholder="Add a note…"></textarea><div class="rowbtns"><button class="sbtn" id="ns">Save note</button></div></div>`;
+}
+function rosterHTML(rows){
+  const act = B.roster.filter(r => r.active !== false).sort((a,b) => a.name.localeCompare(b.name));
+  const un = [...new Map(B.entries.filter(e => !e.playerKey).map(e => [norm(e.player), e])).values()];
+  let h = `<div class="rowbtns"><button class="sbtn ghost" id="bk">‹ Back</button></div>
+    <div class="sect">Add player</div>
+    <div class="addrow"><input id="an" maxlength="40" placeholder="In-game name"><button class="sbtn" id="ab">Add</button></div>`;
+  if (!B.roster.length) h += `<div class="rowbtns" style="margin-top:14px"><button class="sbtn" id="seed">Load starting roster (${SEED.length})</button></div>`;
+  if (un.length) {
+    h += `<div class="sect">Names not on the roster</div><div class="list">${un.map(e => `<div class="row edit" style="display:block">
+      <div style="font-weight:800">${esc(e.player)}</div>
+      <div class="rowbtns"><select data-link="${esc(e.player)}" style="flex:1;border:0;border-radius:10px;background:var(--soft);padding:10px;font-weight:700"><option value="">Link to player…</option>${act.map(r => `<option value="${esc(r.id)}">${esc(r.name)}</option>`).join("")}</select>
+      <button class="sbtn ghost" data-addun="${esc(e.player)}">Add as new</button></div></div>`).join("")}</div>`;
+  }
+  h += `<div class="sect">Players · ${act.length}</div><div class="list">${act.map(r => B.editing === r.id
+    ? `<div class="row edit" style="display:block"><input id="rn" maxlength="40" value="${esc(r.name)}"><div class="rowbtns"><button class="sbtn" data-save="${r.id}">Save</button><button class="sbtn ghost" data-cancel>Cancel</button><button class="sbtn red" data-del="${r.id}">Remove</button></div></div>`
+    : `<button class="row" data-ed="${r.id}"><span class="nm">${esc(r.name)}</span><span class="vl flat">Edit</span></button>`).join("")}</div>`;
+  return h;
+}
+
+function wireBoard(months, mi){
+  const $ = id => document.getElementById(id);
+  $("mn").onclick = () => { B.menu = true; renderBoard(); };
+  if ($("sh")) {
+    $("sh").onclick = e => { if (e.target.id === "sh") { B.menu = false; renderBoard(); } };
+    $("m_roster").onclick = () => { B.menu = false; B.view = "roster"; renderBoard(); };
+    $("m_export").onclick = () => { B.menu = false; exportCSV(); renderBoard(); };
+    $("m_out").onclick = () => { B.menu = false; signOut(auth); };
+  }
+  if ($("pm")) $("pm").onclick = () => { B.month = months[mi-1]; renderBoard(); };
+  if ($("nmx")) $("nmx").onclick = () => { B.month = months[mi+1]; renderBoard(); };
+  if ($("miss")) $("miss").onclick = () => { B.view = B.view === "missing" ? "list" : "missing"; renderBoard(); };
+  document.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { B.tab = b.dataset.tab; renderBoard(); });
+  document.querySelectorAll("[data-band]").forEach(b => b.onclick = () => { B.band = b.dataset.band === "all" ? "all" : Number(b.dataset.band); renderBoard(); });
+  document.querySelectorAll("[data-m]").forEach(b => b.onclick = () => { B.member = b.dataset.m; B.view = "member"; renderBoard(); window.scrollTo(0,0); });
+  if ($("bk")) $("bk").onclick = () => { B.view = "list"; B.editing = null; renderBoard(); };
+  if ($("ns")) $("ns").onclick = async () => {
+    const t = $("nt").value.trim(); if (!t) return;
+    try { await addDoc(collection(db, "notes"), {playerKey:B.member, text:t, month:B.month, at:serverTimestamp()}); toast("Note saved"); }
+    catch(e) { console.error(e); toast("Couldn't save the note"); }
+  };
+  if ($("ab")) $("ab").onclick = async () => {
+    const n = $("an").value.trim(); if (!n) return;
+    if (B.roster.some(r => r.active !== false && norm(r.name) === norm(n))) return toast("Already on the roster");
+    try { await setDoc(doc(collection(db, "roster")), {name:n, active:true}); toast("Added"); } catch(e) { console.error(e); toast("Couldn't add"); }
+  };
+  if ($("seed")) $("seed").onclick = async () => {
+    try { const b = writeBatch(db); SEED.forEach(n => b.set(doc(collection(db, "roster")), {name:n, active:true})); await b.commit(); toast("Roster loaded"); }
+    catch(e) { console.error(e); toast("Couldn't load the roster"); }
+  };
+  document.querySelectorAll("[data-ed]").forEach(b => b.onclick = () => { B.editing = b.dataset.ed; renderBoard(); setTimeout(() => $("rn")?.focus(), 50); });
+  document.querySelectorAll("[data-cancel]").forEach(b => b.onclick = () => { B.editing = null; renderBoard(); });
+  document.querySelectorAll("[data-save]").forEach(b => b.onclick = async () => {
+    const n = $("rn").value.trim(); if (!n) return;
+    try { await updateDoc(doc(db, "roster", b.dataset.save), {name:n}); B.editing = null; toast("Renamed, history kept"); } catch(e) { console.error(e); toast("Couldn't rename"); }
+  });
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    try { await updateDoc(doc(db, "roster", b.dataset.del), {active:false}); B.editing = null; toast("Removed, history kept"); } catch(e) { console.error(e); toast("Couldn't remove"); }
+  });
+  document.querySelectorAll("[data-link]").forEach(sel => sel.onchange = async () => {
+    if (!sel.value) return;
+    await linkEntries(sel.dataset.link, sel.value);
+  });
+  document.querySelectorAll("[data-addun]").forEach(b => b.onclick = async () => {
+    try { const ref = doc(collection(db, "roster")); await setDoc(ref, {name:b.dataset.addun, active:true}); await linkEntries(b.dataset.addun, ref.id); }
+    catch(e) { console.error(e); toast("Couldn't add"); }
+  });
+}
+async function linkEntries(playerName, key){
+  try {
+    const b = writeBatch(db);
+    B.entries.filter(e => !e.playerKey && norm(e.player) === norm(playerName)).forEach(e => b.update(doc(db, "entries", e.id), {playerKey:key}));
+    await b.commit(); toast("Linked");
+  } catch(e) { console.error(e); toast("Couldn't link"); }
+}
+
+function exportCSV(){
+  const head = ["month","player","submitted","thp","gear","exclusive_weapon","hero_skill","drone","unit","tech","overlord","total","squad1_power","squad1_type","squad2_power","squad2_type","squad3_power","squad3_type","squad4","goal","check"];
+  const q = v => { const s = String(v ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; };
+  const nameOf = e => (B.roster.find(r => r.id === e.playerKey) || {}).name || e.player;
+  const lines = [...B.entries].sort((a,b) => a.month.localeCompare(b.month) || nameOf(a).localeCompare(nameOf(b))).map(e => [
+    e.month, nameOf(e), tsOf(e) ? new Date(tsOf(e)).toISOString() : "", e.thp, e.gear, e.exWeapon, e.heroSkill, e.drone, e.unit, e.tech, e.overlord, e.total,
+    ...[0,1,2].flatMap(i => [e.squads?.[i]?.power, e.squads?.[i]?.type]), e.squad4 ? "yes" : "no", e.goal, e.check
+  ].map(q).join(","));
+  const blob = new Blob(["﻿" + [head.join(","), ...lines].join("\n")], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `onda-power-${monthOf(new Date())}.csv`;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
+function renderLogin(){
+  $app.innerHTML = `<div class="login"><h1>R4 login</h1>
+    <input class="inp" id="em" type="email" autocomplete="username" placeholder="Email">
+    <input class="inp" id="pw" type="password" autocomplete="current-password" placeholder="Password">
+    <div class="err" id="er"></div><div class="actions"><button class="btn" id="li">Log in</button></div></div>`;
+  const go = async () => {
+    try { await signInWithEmailAndPassword(auth, document.getElementById("em").value.trim(), document.getElementById("pw").value); }
+    catch(_) { document.getElementById("er").textContent = "Wrong email or password"; }
+  };
+  document.getElementById("li").onclick = go;
+  document.getElementById("pw").addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+}
+
+function startBoard(){
+  let unsubs = [];
+  renderBoard();
+  onAuthStateChanged(auth, user => {
+    unsubs.forEach(u => u()); unsubs = [];
+    B.user = user || null; B.ready = {r:false, e:false, n:false};
+    if (!user) return renderBoard();
+    renderBoard();
+    const err = e => { console.error(e); toast("Couldn't load data"); };
+    unsubs.push(onSnapshot(collection(db, "roster"), s => { B.roster = s.docs.map(d => ({id:d.id, ...d.data()})); B.ready.r = true; renderKeepFocus(); }, err));
+    unsubs.push(onSnapshot(collection(db, "entries"), s => {
+      B.entries = s.docs.map(d => ({id:d.id, ...d.data()})).filter(e => e.month && e.player);
+      const ms = B.entries.map(e => e.month).sort();
+      if (B.ready.e === false && ms.length && !ms.includes(B.month)) B.month = ms[ms.length-1];
+      B.ready.e = true; renderKeepFocus();
+    }, err));
+    unsubs.push(onSnapshot(collection(db, "notes"), s => { B.notes = s.docs.map(d => ({id:d.id, ...d.data()})); B.ready.n = true; renderKeepFocus(); }, err));
+  });
+}
+// don't wipe what an R4 is typing when live data arrives
+function renderKeepFocus(){
+  const a = document.activeElement;
+  if (a && (a.tagName === "TEXTAREA" || a.tagName === "INPUT") && a.value) {
+    const id = a.id, v = a.value; renderBoard();
+    const el = id && document.getElementById(id); if (el) { el.value = v; el.focus(); }
+  } else renderBoard();
+}
+
+/* ============================ ROUTE ============================ */
+if (location.hash === "#r4") startBoard(); else startForm();
+window.addEventListener("hashchange", () => location.reload());
+</script>
+</body>
+</html>
