@@ -69,7 +69,10 @@ button{cursor:pointer;border:0;background:none}
 .heart svg{display:block;width:16px;height:14px;transform:scaleY(-1)}
 .sausage{position:absolute;right:0;top:14px;width:32px;height:13px;transition:transform .3s,opacity .3s}
 .sausage.gone{transform:scale(.2);opacity:0}
-.backrow{height:44px;padding:4px 14px 0}
+.backrow{height:44px;padding:4px 14px 0;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.langs{display:flex;gap:4px;background:var(--soft);border-radius:12px;padding:3px}
+.langs button{border-radius:9px;padding:6px 9px;font-weight:800;font-size:12px;color:var(--ink-soft)}
+.langs button.on{background:var(--card);color:var(--ink)}
 .backbtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px 0 10px;border-radius:10px;background:var(--soft);font-weight:700;font-size:14px;transition:transform .12s var(--ease)}
 .backbtn:active{transform:scale(.95)}
 .backbtn svg{width:18px;height:18px}
@@ -209,6 +212,7 @@ textarea.inp{font-size:18px;font-weight:600;resize:none;min-height:120px;line-he
 .login{max-width:400px;margin:0 auto;padding:110px 22px}
 .login .inp{font-size:18px;margin-top:14px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;font-size:14px;z-index:40;max-width:90vw}
+:lang(ko) body{word-break:keep-all}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -242,45 +246,120 @@ const THEME = "fall";
 const SEED = ["Roo Hefner", "Ex Nihilo", "Beefy Lea", "Beefy Leo", "Beefy MK", "Sjoerd91", "YS0reset", "Beefy MaXYandel", "Beefy VRAU", "MedusAnge1410", "Tazzzsonofleanihi", "MEL", "Jefferson", "MąVi", "Falkeen", "Red Eyess", "Beefy pompey Roo", "Leo Toystory", "Badjak", "I m The Joker", "DB007", "GondorPPP", "DΛDDY", "D3fect", "Naughty Nausti", "Yaminn", "Messidios", "Ythô", "SMoorf", "Deetrader", "BuckeyesfanAinz", "ARCHIE", "D Quintal", "이불꽃사나이SK", "Mario A García", "Kingdoon", "MadMaxVer", "HENRIQUE", "NoDIDDY", "Jimbo dude", "SUZENA", "Rob18650", "NattyNàt", "Mr Smooth Haj", "reproc", "Mol1976", "pipeer", "Abdurhman22", "beto", "Lowieke007", "Softpaws", "WarPapa", "MAJOR BrADMIRAL", "2P神", "BLACKB3TTY", "Samuel Maccari", "DOliveira RJ", "Gabiiyy", "나비손조nabi", "Madame Shana", "Bill", "Og Roo", "FURIOSa", "Wayfind3r", "PEPE817", "DrGonzoxxx", "CDTulu", "JPM85", "JOHN X", "Gabanna11", "Moismee", "Beefy Nihi", "Pioneer Juan", "AlphaSwe", "ChenteCop3", "준 JUN", "Jaශi", "Fram Harrison", "Not smiley", "AzoOz·M", "SUEVEN", "Beefynho Paulo", "G8Ghosttown", "내성격깔끔 EJ", "Lygrit", "Yumyuyum", "ElMuddy", "Jobip", "RICOCASE", "Capitancavernícola", "Cpt Happy Mann", "2 Wycked", "INNOCENT", "Lord Karnage", "Graceegrx", "Father Armann", "v1mes", "Yeroka", "Il Señor Wick"];
 
 /* ============================ TEXTS ============================ */
-const T = {
-  back:"Back", ok:"OK", next:"Next", send:"Send it",
-  title:"ONDA Power Check",
-  q:{
-    name:"What's your in-game name?",
-    top:"Screenshot your Power Details",
-    scroll:"Now scroll down and screenshot again",
-    sq0:"Squad 1", sq1:"Squad 2", sq2:"Squad 3",
-    sq4:"Got a 4th squad?",
-    goal:"Your goal before S7, or what you need help with?",
-    review:"All good?"
-  },
-  hint:{
-    name:"Start typing, then tap your name.",
-    top:"Tap the power icon next to your profile picture. Screenshot the top of the panel.",
-    scroll:"Scroll the same panel down until you see Unit, Tech and Overlord.",
-    sq:"Open this squad and screenshot it, like the example.",
-    sq4:"Just a tick, no screenshot needed.",
-    goal:"Short is fine. Leadership reads every answer.",
-    review:"Check your numbers, then send."
-  },
+const TR = {
+en:{
+  back:"Back", ok:"OK", send:"Send it", title:"ONDA Power Check",
+  q:{name:"What's your in-game name?", top:"Screenshot your Power Details", scroll:"Now scroll down and screenshot again",
+     sq0:"Squad 1", sq1:"Squad 2", sq2:"Squad 3", sq4:"Got a 4th squad?", goal:"Your goal before S7, or what you need help with?", review:"All good?"},
+  hint:{name:"Start typing, then tap your name.", top:"Tap the power icon next to your profile picture. Screenshot the top of the panel.",
+     scroll:"Scroll the same panel down until you see Unit, Tech and Overlord.", sq:"Open this squad and screenshot it, like the example.",
+     sq4:"Just a tick, no screenshot needed.", goal:"Short is fine. Leadership reads every answer.", review:"Check your numbers, then send."},
   ex:{route:"Tap here", top:"Top of panel", scroll:"Scrolled down", squad:"Your squad"},
-  upload:"Upload screenshot", again:"Use another screenshot", reading:"Reading your numbers…",
-  manual:"Type them myself",
+  upload:"Upload screenshot", again:"Use another screenshot", reading:"Reading your numbers…", manual:"Type them myself",
   readFail:"Couldn't read that one. Try another screenshot, or type the numbers.",
   checkTop:"These numbers don't add up. Double-check Hero Power.",
   checkAll:"These numbers don't add up with your total power. Double-check them.",
-  checkOk:"Numbers check out 👌",
-  wrongSquad:"This looks like Squad {n}. Sure it's the right one?",
+  checkOk:"Numbers check out 👌", wrongSquad:"This looks like Squad {n}. Sure it's the right one?",
   f:{thp:"Hero Power (THP)",gear:"Gear",exWeapon:"Exclusive Weapon",heroSkill:"Hero Skill",drone:"Drone Power",unit:"Unit Power",tech:"Tech Power",overlord:"Overlord",power:"Squad power",total:"Total power"},
   typeQ:"Squad type",
   types:{tank:"Tank",air:"Air",missile:"Missile",tank41:"Tank 4+1",air41:"Air 4+1",missile41:"Missile 4+1",mix:"Mix"},
-  yesNo:["Yes","No"],
-  ph:{name:"Your name…",goal:"e.g. Push drone to 200, need help with tech"},
-  e:{req:"Fill this in first",nums:"Fill in all the numbers",bad:"That number looks off",type:"Pick the squad type",notlisted:"Not on our list. Check the spelling, or tap OK again to send anyway.",squad:"Squad power looks off. Type it like 62.28"},
+  yesNo:["Yes","No"], rv:{name:"Name", squad:"Squad {n}", sq4:"4th squad", goal:"Goal"},
+  ph:{name:"Your name…", goal:"e.g. Push drone to 200, need help with tech"},
+  e:{req:"Fill this in first", nums:"Fill in all the numbers", bad:"That number looks off", type:"Pick the squad type",
+     notlisted:"Not on our list. Check the spelling, or tap OK again to send anyway.", squad:"Squad power looks off. Type it like 62.28"},
   sending:"Sending…", fail:"Didn't go through. Try again?",
   done:"Got it, thanks 🙌", doneSub:"See you next month. Keep growing!",
   fallDone:"Keep growing, don't be a farmer like Yero.", fallDoneSub:"And please share that buff with Archie"
+},
+es:{
+  back:"Atrás", ok:"Va", send:"Mandar", title:"ONDA Power Check",
+  q:{name:"¿Cuál es tu nombre en el juego?", top:"Haz captura de tus Detalles de Poder", scroll:"Ahora baja y haz otra captura",
+     sq0:"Escuadrón 1", sq1:"Escuadrón 2", sq2:"Escuadrón 3", sq4:"¿Tienes 4.º escuadrón?", goal:"¿Tu meta antes de la S7, o en qué necesitas ayuda?", review:"¿Todo bien?"},
+  hint:{name:"Empieza a escribir y toca tu nombre.", top:"Toca el ícono de poder junto a tu foto de perfil. Haz captura de la parte de arriba del panel.",
+     scroll:"Baja en el mismo panel hasta ver Unidades, Tecnología y Overlord.", sq:"Abre este escuadrón y haz captura, como en el ejemplo.",
+     sq4:"Solo marca, no hace falta captura.", goal:"Corto está bien. El liderazgo lee cada respuesta.", review:"Revisa tus números y mándalo."},
+  ex:{route:"Toca aquí", top:"Arriba del panel", scroll:"Más abajo", squad:"Tu escuadrón"},
+  upload:"Subir captura", again:"Usar otra captura", reading:"Leyendo tus números…", manual:"Escribirlos yo",
+  readFail:"No se pudo leer. Prueba otra captura o escribe los números.",
+  checkTop:"Estos números no cuadran. Revisa el Poder de héroes.",
+  checkAll:"Estos números no cuadran con tu poder total. Revísalos.",
+  checkOk:"Los números cuadran 👌", wrongSquad:"Parece el Escuadrón {n}. ¿Seguro que es el correcto?",
+  f:{thp:"Poder de héroes (THP)",gear:"Equipo",exWeapon:"Arma exclusiva",heroSkill:"Habilidad de héroe",drone:"Poder del dron",unit:"Poder de unidades",tech:"Poder de tecnología",overlord:"Overlord",power:"Poder del escuadrón",total:"Poder total"},
+  typeQ:"Tipo de escuadrón",
+  types:{tank:"Tanque",air:"Aéreo",missile:"Misil",tank41:"Tanque 4+1",air41:"Aéreo 4+1",missile41:"Misil 4+1",mix:"Mixto"},
+  yesNo:["Sí","No"], rv:{name:"Nombre", squad:"Escuadrón {n}", sq4:"4.º escuadrón", goal:"Meta"},
+  ph:{name:"Tu nombre…", goal:"ej. Subir el dron a 200, necesito ayuda con tecnología"},
+  e:{req:"Llena esto primero", nums:"Llena todos los números", bad:"Ese número se ve raro", type:"Elige el tipo de escuadrón",
+     notlisted:"No está en nuestra lista. Revisa cómo lo escribiste, o toca Va otra vez para mandarlo así.", squad:"El poder del escuadrón se ve raro. Escríbelo como 62.28"},
+  sending:"Enviando…", fail:"No se mandó. ¿Otra vez?",
+  done:"¡Listo, gracias! 🙌", doneSub:"Nos vemos el próximo mes. ¡Sigue creciendo!",
+  fallDone:"Sigue creciendo, no seas granjero como Yero.", fallDoneSub:"Y porfa comparte ese buff con Archie"
+},
+pt:{
+  back:"Voltar", ok:"Beleza", send:"Enviar", title:"ONDA Power Check",
+  q:{name:"Qual é o teu nome no jogo?", top:"Tira print dos teus Detalhes de Poder", scroll:"Agora desce e tira outro print",
+     sq0:"Esquadrão 1", sq1:"Esquadrão 2", sq2:"Esquadrão 3", sq4:"Tem um 4º esquadrão?", goal:"Tua meta antes da S7, ou com o que precisa de ajuda?", review:"Tudo certo?"},
+  hint:{name:"Começa a digitar e toca no teu nome.", top:"Toca no ícone de poder ao lado da tua foto de perfil. Tira print da parte de cima do painel.",
+     scroll:"Desce no mesmo painel até ver Unidades, Tecnologia e Overlord.", sq:"Abre esse esquadrão e tira print, igual ao exemplo.",
+     sq4:"Só marca, não precisa de print.", goal:"Pode ser curto. A liderança lê todas as respostas.", review:"Confere teus números e envia."},
+  ex:{route:"Toca aqui", top:"Topo do painel", scroll:"Mais abaixo", squad:"Teu esquadrão"},
+  upload:"Enviar print", again:"Usar outro print", reading:"Lendo teus números…", manual:"Digitar eu mesmo",
+  readFail:"Não deu pra ler. Tenta outro print ou digita os números.",
+  checkTop:"Esses números não batem. Confere o Poder dos heróis.",
+  checkAll:"Esses números não batem com teu poder total. Confere de novo.",
+  checkOk:"Números batendo 👌", wrongSquad:"Parece o Esquadrão {n}. Certeza que é o certo?",
+  f:{thp:"Poder dos heróis (THP)",gear:"Equipamento",exWeapon:"Arma exclusiva",heroSkill:"Habilidade do herói",drone:"Poder do drone",unit:"Poder das unidades",tech:"Poder de tecnologia",overlord:"Overlord",power:"Poder do esquadrão",total:"Poder total"},
+  typeQ:"Tipo de esquadrão",
+  types:{tank:"Tanque",air:"Aéreo",missile:"Míssil",tank41:"Tanque 4+1",air41:"Aéreo 4+1",missile41:"Míssil 4+1",mix:"Misto"},
+  yesNo:["Sim","Não"], rv:{name:"Nome", squad:"Esquadrão {n}", sq4:"4º esquadrão", goal:"Meta"},
+  ph:{name:"Teu nome…", goal:"ex: Subir o drone pra 200, preciso de ajuda com tecnologia"},
+  e:{req:"Preenche isso primeiro", nums:"Preenche todos os números", bad:"Esse número tá estranho", type:"Escolhe o tipo de esquadrão",
+     notlisted:"Não tá na nossa lista. Confere a escrita, ou toca Beleza de novo pra enviar assim mesmo.", squad:"O poder do esquadrão tá estranho. Escreve tipo 62.28"},
+  sending:"Enviando…", fail:"Não foi. Tenta de novo?",
+  done:"Recebido, valeu! 🙌", doneSub:"Até o mês que vem. Continua crescendo!",
+  fallDone:"Continua crescendo, não seja fazendeiro igual o Yero.", fallDoneSub:"E por favor divide esse buff com o Archie"
+},
+ko:{
+  back:"뒤로", ok:"확인", send:"보내기", title:"ONDA Power Check",
+  q:{name:"게임 닉네임이 뭐야?", top:"전투력 상세 화면을 캡처해 줘", scroll:"이제 아래로 내려서 한 번 더 캡처해 줘",
+     sq0:"1부대", sq1:"2부대", sq2:"3부대", sq4:"4부대 있어?", goal:"S7 전까지 목표, 또는 도움이 필요한 부분은?", review:"다 맞아?"},
+  hint:{name:"입력하다가 네 이름을 눌러 줘.", top:"프로필 사진 옆 전투력 아이콘을 눌러. 패널 위쪽을 캡처해 줘.",
+     scroll:"같은 패널을 유닛, 기술, 오버로드가 보일 때까지 내려 줘.", sq:"이 부대를 열고 예시처럼 캡처해 줘.",
+     sq4:"체크만 하면 돼, 캡처는 필요 없어.", goal:"짧아도 괜찮아. 운영진이 전부 읽어.", review:"숫자 확인하고 보내 줘."},
+  ex:{route:"여기 눌러", top:"패널 위쪽", scroll:"아래로 내린 화면", squad:"네 부대"},
+  upload:"캡처 올리기", again:"다른 캡처 쓰기", reading:"숫자 읽는 중…", manual:"직접 입력할게",
+  readFail:"읽지 못했어. 다른 캡처를 올리거나 숫자를 직접 입력해 줘.",
+  checkTop:"숫자가 안 맞아. 영웅 전투력을 다시 확인해 줘.",
+  checkAll:"총 전투력이랑 숫자가 안 맞아. 다시 확인해 줘.",
+  checkOk:"숫자 확인 완료 👌", wrongSquad:"{n}부대 같아 보여. 맞는 부대야?",
+  f:{thp:"영웅 전투력 (THP)",gear:"장비",exWeapon:"전용 무기",heroSkill:"영웅 스킬",drone:"드론 전투력",unit:"유닛 전투력",tech:"기술 전투력",overlord:"오버로드",power:"부대 전투력",total:"총 전투력"},
+  typeQ:"부대 유형",
+  types:{tank:"탱크",air:"항공",missile:"미사일",tank41:"탱크 4+1",air41:"항공 4+1",missile41:"미사일 4+1",mix:"혼합"},
+  yesNo:["응","아니"], rv:{name:"이름", squad:"{n}부대", sq4:"4부대", goal:"목표"},
+  ph:{name:"이름…", goal:"예: 드론 200까지 올리기, 기술 도움 필요"},
+  e:{req:"먼저 이거 채워 줘", nums:"숫자를 전부 채워 줘", bad:"숫자가 이상해 보여", type:"부대 유형을 골라 줘",
+     notlisted:"명단에 없는 이름이야. 철자를 확인하거나, 그대로 보내려면 확인을 한 번 더 눌러.", squad:"부대 전투력이 이상해 보여. 62.28처럼 입력해 줘"},
+  sending:"보내는 중…", fail:"전송 실패. 다시 해볼래?",
+  done:"접수 완료, 고마워 🙌", doneSub:"다음 달에 봐. 계속 성장하자!",
+  fallDone:"계속 성장해, Yero처럼 농부 되지 말고.", fallDoneSub:"그리고 그 버프는 Archie랑 꼭 나눠 줘"
+}
 };
+const LANGS = [["en","EN"],["es","ES"],["pt","PT"],["ko","KO"]];
+const LANG_KEY = "onda_power_lang";
+function detectLang(){
+  try { const saved = localStorage.getItem(LANG_KEY); if (saved && TR[saved]) return saved; } catch(_){}
+  for (const l of (navigator.languages || [navigator.language || "en"])) {
+    const p = String(l).toLowerCase().slice(0, 2);
+    if (TR[p]) return p;
+  }
+  return "en";
+}
+let LANG = "en", T = TR.en;
+function setLang(l, remember){
+  LANG = TR[l] ? l : "en"; T = TR[LANG];
+  document.documentElement.lang = LANG;
+  if (remember) { try { localStorage.setItem(LANG_KEY, LANG); } catch(_){} }
+}
 
 /* ============================ HELPERS ============================ */
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -438,8 +517,10 @@ function drawTop(p, finished, showBack){
   $top.querySelector(".lane").classList.toggle("kiss", !!finished);
   $top.querySelector(".heart").classList.toggle("on", !!finished);
   const row = $top.querySelector(".backrow");
-  row.innerHTML = showBack ? `<button class="backbtn" id="bk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>${esc(T.back)}</button>` : "";
+  row.innerHTML = (showBack ? `<button class="backbtn" id="bk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>${esc(T.back)}</button>` : "<span></span>")
+    + `<div class="langs">${LANGS.map(([c,n]) => `<button data-lang="${c}" class="${LANG === c ? "on" : ""}" aria-label="${n}">${n}</button>`).join("")}</div>`;
   const bk = row.querySelector("#bk"); if (bk) bk.onclick = () => go(S.i - 1, -1);
+  row.querySelectorAll("[data-lang]").forEach(b => b.onclick = () => { if (b.dataset.lang === LANG) return; setLang(b.dataset.lang, true); S.dir = 0; render(); });
 }
 
 function go(i, dir){ S.i = Math.max(0, Math.min(STEPS.length, i)); S.dir = dir; S.notListedOk = false; saveDraft(); render(); window.scrollTo(0, 0); }
@@ -522,11 +603,11 @@ function render(){
   }
   if (id === "review") {
     const rows = [
-      ["Name", a.name],
+      [T.rv.name, a.name],
       ...FIELDS_TOP.concat(FIELDS_SCROLL).map(k => [T.f[k], fmtN(a.v[k])]),
-      ...a.squads.map((q,n) => [`Squad ${n+1}`, `${fmtM(q.power)} · ${T.types[q.type] || "?"}`]),
-      ["4th squad", a.squad4 ? T.yesNo[0] : T.yesNo[1]],
-      ["Goal", a.goal]
+      ...a.squads.map((q,n) => [T.rv.squad.replace("{n}", n+1), `${fmtM(q.power)} · ${T.types[q.type] || "?"}`]),
+      [T.rv.sq4, a.squad4 ? T.yesNo[0] : T.yesNo[1]],
+      [T.rv.goal, a.goal]
     ];
     body = `<div class="rev">${rows.map(([k,v]) => `<div class="rrow"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("")}</div>`;
     btn = S.sending ? T.sending : T.send;
@@ -696,6 +777,7 @@ async function send(){
 }
 
 async function startForm(){
+  setLang(detectLang(), false);
   if (THEME) document.body.classList.add(THEME);
   if (THEME === "fall") document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#F7F1E8");
   loadDraft(); render();
