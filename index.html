@@ -139,6 +139,16 @@ textarea.inp{font-size:18px;font-weight:600;resize:none;min-height:120px;line-he
 .types{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .types .sug{font-size:14px}
 .tlabel{margin-top:16px;font-size:14px;font-weight:800;color:var(--ink-soft)}
+.sqcard{margin-top:12px;background:var(--card);border-radius:14px;padding:12px 14px}
+.sqhead{font-size:14px;font-weight:800;color:var(--ink-soft);margin-bottom:8px}
+.sqgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.minp{display:flex;align-items:center;background:var(--soft);border-radius:10px;padding-right:12px}
+.minp input{width:100%;min-width:0;border:0;background:transparent;padding:11px 6px 11px 12px;font-size:17px;font-weight:800;outline:none;text-align:right}
+.minp b{font-weight:800;color:var(--ink-soft)}
+.sqcard select{width:100%;border:0;border-radius:10px;background:var(--soft);padding:11px 10px;font-size:16px;font-weight:700;outline:none;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink-soft) 50%),linear-gradient(135deg,var(--ink-soft) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+.myth{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-size:14px;font-weight:700;color:var(--ink-soft)}
+.myth input{width:70px;border:0;border-radius:10px;background:var(--soft);padding:9px 10px;font-size:16px;font-weight:800;text-align:right;outline:none}
+.minp:has(input.bad),.sqcard select.bad{background-color:var(--errbg);color:var(--err)}
 .mfield{display:flex;align-items:center;gap:6px}
 .mfield input{width:64px;text-align:right;border:0;background:var(--soft);border-radius:10px;padding:10px 12px;font-size:17px;font-weight:800;outline:none}
 .mfield b{font-weight:800;color:var(--ink-soft)}
@@ -261,7 +271,7 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
 const auth = getAuth(fbApp);
-const DRAFT_KEY = "onda_power_draft_v1";
+const DRAFT_KEY = "onda_power_draft_v2";
 // Seasonal look of the member form: "fall" = rooster, turkey, pumpkins. "" = plain raccoon version.
 const THEME = "fall";
 
@@ -292,6 +302,7 @@ en:{
   sending:"Sending…", fail:"Didn't go through. Try again?",
   done:"Got it, thanks 🙌", doneSub:"See you next month. Keep growing!",
   style:{title:"How you play", fights:"Fights", front:"Front line", support:"Support", wallet:"Wallet", wOpts:["F2P","Sometimes","Buyer"], private:"Rather not say", tips:"Tips?", tOpts:["Yes pls","Nah, I know my way","I'm Smoorf"], err:"Pick one in each"}, mythic:"Mythic gear",
+  sqTitle:"Your squads", sqHint:"Type them like the game shows them. Find them under Lineup Preset → View Details.", where:"Power and gear are here", typePick:"Type…", mythicOpt:"Mythic gear (optional, rough count)", mythicHint:"Mythic = red gear with all 5 trinkets filled. A rough count is fine.", mythicShort:"mythic", sq4tick:"I have a 4th squad", sqErr:"Fill in power and type for all 3 squads",
   fallDone:"Keep growing, don't be a farmer like Yero.", fallDoneSub:"And please share that buff with Archie"
 },
 es:{
@@ -317,6 +328,7 @@ es:{
   sending:"Enviando…", fail:"No se mandó. ¿Otra vez?",
   done:"¡Listo, gracias! 🙌", doneSub:"Nos vemos el próximo mes. ¡Sigue creciendo!",
   style:{title:"Cómo juegas", fights:"Peleas", front:"Primera línea", support:"Apoyo", wallet:"Cartera", wOpts:["F2P","A veces","Compro"], private:"Prefiero no decir", tips:"¿Tips?", tOpts:["Sí, porfa","Nel, ya sé cómo","Soy Smoorf"], err:"Elige una en cada una"}, mythic:"Equipo mítico",
+  sqTitle:"Tus escuadrones", sqHint:"Escríbelos como salen en el juego. Los ves en Lineup Preset → View Details.", where:"Aquí ves poder y equipo", typePick:"Tipo…", mythicOpt:"Equipo mítico (opcional, aprox.)", mythicHint:"Mítico = equipo rojo con los 5 adornos llenos. Un aproximado está bien.", mythicShort:"míticos", sq4tick:"Tengo 4.º escuadrón", sqErr:"Pon poder y tipo de los 3 escuadrones",
   fallDone:"Sigue creciendo, no seas granjero como Yero.", fallDoneSub:"Y porfa comparte ese buff con Archie"
 },
 pt:{
@@ -342,6 +354,7 @@ pt:{
   sending:"Enviando…", fail:"Não foi. Tenta de novo?",
   done:"Recebido, valeu! 🙌", doneSub:"Até o mês que vem. Continua crescendo!",
   style:{title:"Como tu joga", fights:"Lutas", front:"Linha de frente", support:"Suporte", wallet:"Carteira", wOpts:["F2P","Às vezes","Compro"], private:"Prefiro não dizer", tips:"Dicas?", tOpts:["Sim, por favor","Não, já sei o caminho","Sou o Smoorf"], err:"Escolhe uma em cada"}, mythic:"Equipamento mítico",
+  sqTitle:"Teus esquadrões", sqHint:"Escreve igual aparece no jogo. Tá em Lineup Preset → View Details.", where:"Poder e equipamento ficam aqui", typePick:"Tipo…", mythicOpt:"Equipamento mítico (opcional, aprox.)", mythicHint:"Mítico = equipamento vermelho com os 5 enfeites cheios. Aproximado tá ok.", mythicShort:"míticos", sq4tick:"Tenho um 4º esquadrão", sqErr:"Preenche poder e tipo dos 3 esquadrões",
   fallDone:"Continua crescendo, não seja fazendeiro igual o Yero.", fallDoneSub:"E por favor divide esse buff com o Archie"
 },
 ko:{
@@ -367,6 +380,7 @@ ko:{
   sending:"보내는 중…", fail:"전송 실패. 다시 해볼래?",
   done:"접수 완료, 고마워 🙌", doneSub:"다음 달에 봐. 계속 성장하자!",
   style:{title:"플레이 스타일", fights:"전투", front:"최전방", support:"지원", wallet:"지갑", wOpts:["무과금","가끔 과금","과금러"], private:"말하기 싫어", tips:"팁 받을래?", tOpts:["응, 부탁해","아니, 내가 알아서 할게","난 Smoorf야"], err:"각 항목에서 하나씩 골라 줘"}, mythic:"신화 장비",
+  sqTitle:"내 부대", sqHint:"게임에 나온 그대로 입력해 줘. Lineup Preset → View Details에서 볼 수 있어.", where:"전투력과 장비는 여기서 확인", typePick:"유형…", mythicOpt:"신화 장비 (선택, 대략)", mythicHint:"신화 = 장식 5개가 다 찬 빨간 장비. 대략이면 돼.", mythicShort:"신화", sq4tick:"4부대 있어", sqErr:"3개 부대 모두 전투력과 유형을 입력해 줘",
   fallDone:"계속 성장해, Yero처럼 농부 되지 말고.", fallDoneSub:"그리고 그 버프는 Archie랑 꼭 나눠 줘"
 }
 };
@@ -500,7 +514,7 @@ async function readShot(kind, file){
 const posInt = v => (typeof v === "number" && isFinite(v) && v >= 0) ? Math.round(v) : (typeof v === "string" ? parseFull(v) : null);
 
 /* ============================ MEMBER FORM ============================ */
-const STEPS = ["name","top","scroll","sq0","sq1","sq2","sq4","style","goal","review"];
+const STEPS = ["name","top","scroll","squads","style","goal","review"];
 const WALLETS = ["f2p","sometimes","buyer"], TIPS = ["yes","nah","smoorf"];
 const FIELDS_TOP = ["thp","gear","exWeapon","heroSkill","drone"];
 const FIELDS_SCROLL = ["unit","tech","overlord"];
@@ -608,25 +622,16 @@ function render(){
       }
     }
   }
-  if (id === "sq0" || id === "sq1" || id === "sq2") {
-    const n = Number(id[2]), q = a.squads[n];
-    body = exHTML([["ex/preset.jpg", T.ex.preset], ["ex/details.jpg", T.ex.details], ["ex/lineup.jpg", T.ex.lineup]]);
-    if (q.read === "reading") { body += `<div class="reading"><span class="spin"></span>${esc(T.reading)}</div>`; showBtn = false; }
-    else {
-      body += uploadHTML("file", q.read !== "idle");
-      if (q.read === "idle") { extra = `<button class="link" id="man">${esc(T.manual)}</button>`; showBtn = false; }
-      else {
-        if (q.read === "fail") body += `<div class="note warn">${esc(T.readFail)}</div>`;
-        body += `<div class="vals"><div class="vrow"><label for="sqp">${esc(T.f.power)}</label><input id="sqp" inputmode="decimal" autocomplete="off" value="${q.power != null ? esc((q.power/1e6).toFixed(2)) + "M" : ""}" placeholder="62.28M"></div>
-          <div class="vrow"><label for="sqm">${esc(T.mythic)}</label><span class="mfield"><input id="sqm" inputmode="numeric" autocomplete="off" maxlength="2" value="${q.mythic != null ? q.mythic : ""}" placeholder="0"><b>/20</b></span></div></div>
-          <div class="tlabel">${esc(T.typeQ)}</div>
-          <div class="types">${TYPES.map(t => `<button class="sug ${q.type === t ? "on" : ""}" data-type="${t}">${esc(T.types[t])}</button>`).join("")}</div>`;
-      }
-    }
-  }
-  if (id === "sq4") {
-    body = `<div class="opts">${["yes","no"].map((k,j) => `<button class="opt ${a.squad4 === (k === "yes") ? "sel" : ""}" data-s4="${k}">${esc(T.yesNo[j])}${TICK}</button>`).join("")}</div>`;
-    showBtn = false;
+  if (id === "squads") {
+    body = exHTML([["ex/lineup.jpg", T.where]]) + a.squads.map((q,n) => `<div class="sqcard">
+        <div class="sqhead">${esc(T.rv.squad.replace("{n}", n+1))}</div>
+        <div class="sqgrid">
+          <span class="minp"><input id="p${n}" data-p="${n}" inputmode="decimal" autocomplete="off" aria-label="${esc(T.f.power)}" value="${q.power != null ? (q.power/1e6).toFixed(2) : ""}" placeholder="62.28"><b>M</b></span>
+          <select id="t${n}" data-t="${n}" aria-label="${esc(T.typeQ)}"><option value="">${esc(T.typePick)}</option>${TYPES.map(t => `<option value="${t}" ${q.type === t ? "selected" : ""}>${esc(T.types[t])}</option>`).join("")}</select>
+        </div>
+        <label class="myth"><span>${esc(T.mythicOpt)}</span><input id="m${n}" data-m="${n}" inputmode="numeric" maxlength="3" autocomplete="off" value="${q.mythic ?? ""}" placeholder="~"></label>
+      </div>`).join("")
+      + `<p class="hint">${esc(T.mythicHint)}</p><button class="tickrow ${a.squad4 ? "on" : ""}" id="s4"><span class="box"></span>${esc(T.sq4tick)}</button>`;
   }
   if (id === "style") {
     const st = T.style, priv = a.wallet === "private";
@@ -646,7 +651,7 @@ function render(){
     const rows = [
       [T.rv.name, a.name],
       ...FIELDS_TOP.concat(FIELDS_SCROLL).map(k => [T.f[k], fmtN(a.v[k])]),
-      ...a.squads.map((q,n) => [T.rv.squad.replace("{n}", n+1), `${fmtM(q.power)} · ${T.types[q.type] || "?"} · ${q.mythic ?? 0}/20`]),
+      ...a.squads.map((q,n) => [T.rv.squad.replace("{n}", n+1), `${fmtM(q.power)} · ${T.types[q.type] || "?"}${q.mythic != null ? ` · ${q.mythic} ${T.mythicShort}` : ""}`]),
       [T.rv.sq4, a.squad4 ? T.yesNo[0] : T.yesNo[1]],
       [T.style.fights, `${a.fight}/5 · ${a.fight <= 2 ? T.style.front : a.fight >= 4 ? T.style.support : T.style.front + " + " + T.style.support}`],
       [T.style.wallet, a.wallet === "private" ? T.style.private : T.style.wOpts[WALLETS.indexOf(a.wallet)]],
@@ -657,10 +662,10 @@ function render(){
     btn = S.sending ? T.sending : T.send;
   }
 
-  const hint = id.startsWith("sq") && id !== "sq4" ? T.hint.sq.replace("{n}", Number(id[2]) + 1) : T.hint[id];
+  const hint = id === "squads" ? T.sqHint : T.hint[id];
   $app.innerHTML = `<main><section class="step ${anim}" id="stp">
     <div class="num">${S.i+1} / ${STEPS.length}</div>
-    <h1>${esc(id === "style" ? T.style.title : T.q[id])}</h1>
+    <h1>${esc(id === "style" ? T.style.title : id === "squads" ? T.sqTitle : T.q[id])}</h1>
     ${hint ? `<p class="hint">${esc(hint)}</p>` : ""}
     ${body}
     <div class="err" id="er" role="alert"></div>
@@ -713,13 +718,12 @@ function wire(id){
         const map = {hero:"thp", drone:"drone", building:"building", unit:"unit", tech:"tech", overlord:"overlord", tactics:"tactics"};
         Object.entries(map).forEach(([from, to]) => { const n = posInt(s[from]); if (n != null) a.v[to] = n; });
         const tot = posInt(r.total); if (tot != null) a.v.total = tot;
-        if (Array.isArray(r.hero_parts) && r.hero_parts.length >= 6) {
-          const hp = r.hero_parts.map(posInt);
-          a.heroParts = hp;
-          if (hp[2] != null) a.v.gear = hp[2];
-          if (hp[3] != null) a.v.exWeapon = hp[3];
-          if (hp[5] != null) a.v.heroSkill = hp[5];
-        }
+        if (Array.isArray(r.hero_parts) && r.hero_parts.length >= 6) a.heroParts = r.hero_parts.map(posInt);
+        // lines are picked by name in the reader: their order differs per account
+        const g = posInt(r.gear), ew = posInt(r.exclusive_weapon), hs = posInt(r.hero_skill);
+        if (g != null) a.v.gear = g;
+        if (ew != null) a.v.exWeapon = ew;
+        if (hs != null) a.v.heroSkill = hs;
         const keys = id === "top" ? FIELDS_TOP : FIELDS_SCROLL;
         a.st[id] = keys.some(k => a.v[k] == null) ? "fail" : "done";
       } catch(_) { a.st[id] = "fail"; }
@@ -732,38 +736,18 @@ function wire(id){
     });
   }
 
-  if (id === "sq0" || id === "sq1" || id === "sq2") {
-    const n = Number(id[2]), q = a.squads[n];
-    const f = document.getElementById("file");
-    if (f) f.onchange = async () => {
-      const file = f.files && f.files[0]; if (!file) return;
-      q.read = "reading"; render();
-      try {
-        const r = await readShot("squad", file);
-        const p = posInt(r.power); if (p != null && p > 0) q.power = p;
-        const t = typeOf(Array.isArray(r.types) ? r.types : []); if (t) q.type = t;
-        const m = posInt(r.mythic); if (m != null && m <= 20) q.mythic = m;
-        q.read = (q.power != null && q.type) ? "done" : "fail";
-      } catch(_) { q.read = "fail"; }
-      saveDraft(); render();
-    };
-    if (man) man.onclick = () => { q.read = "manual"; saveDraft(); render(); };
-    const sqp = document.getElementById("sqp");
-    if (sqp) sqp.addEventListener("input", () => { const v = parseSquad(sqp.value); q.power = (v == null || isNaN(v)) ? null : v; saveDraft(); });
-    const sqm = document.getElementById("sqm");
-    if (sqm) sqm.addEventListener("input", () => { const v = parseFull(sqm.value); q.mythic = (v == null || v > 20) ? null : v; saveDraft(); });
-    $app.querySelectorAll("[data-type]").forEach(b => b.onclick = () => {
-      q.type = b.dataset.type; saveDraft();
-      $app.querySelectorAll("[data-type]").forEach(x => x.classList.toggle("on", x === b));
-    });
-  }
-
-  if (id === "sq4") {
-    $app.querySelectorAll("[data-s4]").forEach(b => b.onclick = () => {
-      a.squad4 = b.dataset.s4 === "yes";
-      $app.querySelectorAll("[data-s4]").forEach(x => x.classList.toggle("sel", x === b));
-      saveDraft(); setTimeout(() => go(S.i + 1, 1), 260);
-    });
+  if (id === "squads") {
+    $app.querySelectorAll("input,select").forEach(el => el.addEventListener("input", () => { document.getElementById("er").textContent = ""; }));
+    $app.querySelectorAll("[data-p]").forEach(i => i.addEventListener("input", () => {
+      const q = a.squads[i.dataset.p], v = parseSquad(i.value); q.power = (v == null || isNaN(v)) ? null : v; i.classList.remove("bad"); saveDraft();
+    }));
+    $app.querySelectorAll("[data-t]").forEach(sel => sel.addEventListener("change", () => {
+      a.squads[sel.dataset.t].type = sel.value || null; sel.classList.remove("bad"); saveDraft();
+    }));
+    $app.querySelectorAll("[data-m]").forEach(i => i.addEventListener("input", () => {
+      const v = parseFull(i.value); a.squads[i.dataset.m].mythic = v == null ? null : Math.min(v, 999); saveDraft();
+    }));
+    document.getElementById("s4").onclick = e => { a.squad4 = !a.squad4; e.currentTarget.classList.toggle("on", a.squad4); saveDraft(); };
   }
 
   if (id === "style") {
@@ -799,11 +783,13 @@ function next(){
       if (bad.length) { bad.forEach(k => document.getElementById("f_" + k)?.classList.add("bad")); return fail(T.e.bad); }
     }
   }
-  if (id.startsWith("sq") && id !== "sq4") {
-    const q = a.squads[Number(id[2])];
-    if (q.power == null || q.power < 1e6 || q.power > 1e9) return fail(T.e.squad);
-    if (!q.type) return fail(T.e.type);
-    if (q.mythic == null) q.mythic = 0;
+  if (id === "squads") {
+    let bad = false;
+    a.squads.forEach((q,n) => {
+      if (q.power == null || q.power < 1e6 || q.power > 2e9) { document.getElementById("p"+n)?.classList.add("bad"); bad = true; }
+      if (!q.type) { document.getElementById("t"+n)?.classList.add("bad"); bad = true; }
+    });
+    if (bad) return fail(T.sqErr);
   }
   if (id === "style" && (!a.fight || !a.wallet || !a.tips)) return fail(T.style.err);
   if (id === "goal" && !a.goal.trim()) return fail(T.e.req);
@@ -820,7 +806,7 @@ async function send(){
     month: monthOf(new Date()), submittedAt: serverTimestamp(),
     thp: a.v.thp, gear: a.v.gear, exWeapon: a.v.exWeapon, heroSkill: a.v.heroSkill, drone: a.v.drone,
     unit: a.v.unit, tech: a.v.tech, overlord: a.v.overlord, total: a.v.total ?? null,
-    squads: a.squads.map(q => ({power: q.power, type: q.type, mythic: q.mythic ?? 0})),
+    squads: a.squads.map(q => ({power: q.power, type: q.type, mythic: q.mythic ?? null})),
     squad4: !!a.squad4, fight: a.fight, wallet: a.wallet, tips: a.tips, goal: a.goal.trim().slice(0, 600),
     check: ck === true ? "ok" : ck === false ? "off" : "unknown"
   };
@@ -973,7 +959,7 @@ function memberHTML(per, rows){
     <div class="sect">What changed</div>
     <div class="kv">${FIELD_ROWS.slice(1).filter(([f]) => cur[f] != null).map(([f,l]) => `<div class="r"><span>${l}</span><b>${fmtM(cur[f])}</b>${prev ? dd(d(cur[f], prev[f])) : `<em></em>`}</div>`).join("")}</div>
     <div class="sect">Squads</div>
-    <div class="kv">${(cur.squads || []).map((q,i) => `<div class="r"><span>Squad ${i+1} · ${esc(T.types[q.type] || "?")}${q.mythic != null ? ` · ${q.mythic}/20 mythic` : ""}</span><b>${fmtM(q.power)}</b>${prev && prev.squads ? dd(d(q.power, prev.squads[i]?.power)) : `<em></em>`}</div>`).join("")}
+    <div class="kv">${(cur.squads || []).map((q,i) => `<div class="r"><span>Squad ${i+1} · ${esc(T.types[q.type] || "?")}${q.mythic != null ? ` · ${q.mythic} mythic` : ""}</span><b>${fmtM(q.power)}</b>${prev && prev.squads ? dd(d(q.power, prev.squads[i]?.power)) : `<em></em>`}</div>`).join("")}
       <div class="r"><span>4th squad</span><b>${cur.squad4 ? "Yes" : "No"}</b><em></em></div></div>
     ${cur.fight ? `<div class="sect">Play style</div><div class="kv">
       <div class="r"><span>Fights</span><b>⚔️ ${"●".repeat(cur.fight - 1)}◉${"●".repeat(5 - cur.fight)} 🛡️</b><em></em></div>
