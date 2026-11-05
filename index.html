@@ -139,6 +139,28 @@ textarea.inp{font-size:18px;font-weight:600;resize:none;min-height:120px;line-he
 .types{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .types .sug{font-size:14px}
 .tlabel{margin-top:16px;font-size:14px;font-weight:800;color:var(--ink-soft)}
+.mfield{display:flex;align-items:center;gap:6px}
+.mfield input{width:64px;text-align:right;border:0;background:var(--soft);border-radius:10px;padding:10px 12px;font-size:17px;font-weight:800;outline:none}
+.mfield b{font-weight:800;color:var(--ink-soft)}
+.srow{margin-top:22px}
+.slabel{font-size:14px;font-weight:800;color:var(--ink-soft);margin-bottom:8px}
+.fight{display:flex;align-items:center;justify-content:space-between;background:var(--card);border-radius:14px;padding:12px 14px;font-size:20px}
+.fight .dot{width:30px;height:30px;border-radius:50%;background:var(--soft);transition:transform .12s var(--ease),background .15s}
+.fight .dot.on{background:var(--accent);transform:scale(1.15)}
+.ends{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--ink-faint);padding:6px 4px 0}
+.seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--soft);border-radius:12px;padding:4px;transition:opacity .2s}
+.seg3 button{border-radius:9px;padding:11px 4px;font-weight:800;font-size:14px;color:var(--ink-soft)}
+.seg3 button.on{background:var(--accent);color:#fff}
+.seg3.off{opacity:.35;pointer-events:none}
+.tickrow{display:flex;align-items:center;gap:10px;margin-top:10px;font-weight:700;font-size:14px;color:var(--ink-soft)}
+.tickrow .box{width:22px;height:22px;border-radius:7px;background:var(--soft2);position:relative}
+.tickrow.on .box{background:var(--accent)}
+.tickrow.on .box::after{content:"";position:absolute;left:7px;top:3px;width:6px;height:11px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg)}
+.radios{display:grid;gap:8px}
+.radios button{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:12px;padding:13px 14px;font-weight:700;font-size:16px;text-align:left}
+.radios .rd{width:20px;height:20px;border-radius:50%;background:var(--soft2);flex:none;position:relative}
+.radios button.on .rd{background:var(--accent)}
+.radios button.on .rd::after{content:"";position:absolute;inset:6px;border-radius:50%;background:#fff}
 .rev{margin-top:20px;background:var(--card);border-radius:14px;padding:6px 16px}
 .rrow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;font-size:15px;font-weight:600}
 .rrow+.rrow{border-top:1px solid var(--soft)}
@@ -252,7 +274,7 @@ en:{
   q:{name:"What's your in-game name?", top:"Screenshot your Power Details", scroll:"Now scroll down and screenshot again",
      sq0:"Squad 1", sq1:"Squad 2", sq2:"Squad 3", sq4:"Got a 4th squad?", goal:"Your goal before S7, or what you need help with?", review:"All good?"},
   hint:{name:"Start typing, then tap your name.", top:"Tap the power icon next to your profile picture. Screenshot the top of the panel.",
-     scroll:"Scroll the same panel down until you see Unit, Tech and Overlord.", sq:"Open Squad {n} and follow the examples: blue button at the bottom, then the details button. Screenshot that screen. The squad screen itself works too.",
+     scroll:"Scroll the same panel down until you see Unit, Tech and Overlord.", sq:"Open Squad {n} and follow the examples: blue button at the bottom, then the details button. Screenshot that screen.",
      sq4:"Just a tick, no screenshot needed.", goal:"Short is fine. Leadership reads every answer.", review:"Check your numbers, then send."},
   ex:{route:"Tap here", top:"Top of panel", scroll:"Scrolled down", squad:"Your squad", preset:"1. Tap this", details:"2. Then this", lineup:"3. Screenshot this"},
   upload:"Upload screenshot", again:"Use another screenshot", reading:"Reading your numbers…", manual:"Type them myself",
@@ -269,6 +291,7 @@ en:{
      notlisted:"Not on our list. Check the spelling, or tap OK again to send anyway.", squad:"Squad power looks off. Type it like 62.28"},
   sending:"Sending…", fail:"Didn't go through. Try again?",
   done:"Got it, thanks 🙌", doneSub:"See you next month. Keep growing!",
+  style:{title:"How you play", fights:"Fights", front:"Front line", support:"Support", wallet:"Wallet", wOpts:["F2P","Sometimes","Buyer"], private:"Rather not say", tips:"Tips?", tOpts:["Yes pls","Nah, I know my way","I'm Smoorf"], err:"Pick one in each"}, mythic:"Mythic gear",
   fallDone:"Keep growing, don't be a farmer like Yero.", fallDoneSub:"And please share that buff with Archie"
 },
 es:{
@@ -276,7 +299,7 @@ es:{
   q:{name:"¿Cuál es tu nombre en el juego?", top:"Haz captura de tus Detalles de Poder", scroll:"Ahora baja y haz otra captura",
      sq0:"Escuadrón 1", sq1:"Escuadrón 2", sq2:"Escuadrón 3", sq4:"¿Tienes 4.º escuadrón?", goal:"¿Tu meta antes de la S7, o en qué necesitas ayuda?", review:"¿Todo bien?"},
   hint:{name:"Empieza a escribir y toca tu nombre.", top:"Toca el ícono de poder junto a tu foto de perfil. Haz captura de la parte de arriba del panel.",
-     scroll:"Baja en el mismo panel hasta ver Unidades, Tecnología y Overlord.", sq:"Abre el Escuadrón {n} y sigue los ejemplos: botón azul de abajo y luego el botón de detalles. Haz captura de esa pantalla. También sirve la pantalla del escuadrón.",
+     scroll:"Baja en el mismo panel hasta ver Unidades, Tecnología y Overlord.", sq:"Abre el Escuadrón {n} y sigue los ejemplos: botón azul de abajo y luego el botón de detalles. Haz captura de esa pantalla.",
      sq4:"Solo marca, no hace falta captura.", goal:"Corto está bien. El liderazgo lee cada respuesta.", review:"Revisa tus números y mándalo."},
   ex:{route:"Toca aquí", top:"Arriba del panel", scroll:"Más abajo", squad:"Tu escuadrón", preset:"1. Toca aquí", details:"2. Luego aquí", lineup:"3. Captura esto"},
   upload:"Subir captura", again:"Usar otra captura", reading:"Leyendo tus números…", manual:"Escribirlos yo",
@@ -293,6 +316,7 @@ es:{
      notlisted:"No está en nuestra lista. Revisa cómo lo escribiste, o toca Va otra vez para mandarlo así.", squad:"El poder del escuadrón se ve raro. Escríbelo como 62.28"},
   sending:"Enviando…", fail:"No se mandó. ¿Otra vez?",
   done:"¡Listo, gracias! 🙌", doneSub:"Nos vemos el próximo mes. ¡Sigue creciendo!",
+  style:{title:"Cómo juegas", fights:"Peleas", front:"Primera línea", support:"Apoyo", wallet:"Cartera", wOpts:["F2P","A veces","Compro"], private:"Prefiero no decir", tips:"¿Tips?", tOpts:["Sí, porfa","Nel, ya sé cómo","Soy Smoorf"], err:"Elige una en cada una"}, mythic:"Equipo mítico",
   fallDone:"Sigue creciendo, no seas granjero como Yero.", fallDoneSub:"Y porfa comparte ese buff con Archie"
 },
 pt:{
@@ -300,7 +324,7 @@ pt:{
   q:{name:"Qual é o teu nome no jogo?", top:"Tira print dos teus Detalhes de Poder", scroll:"Agora desce e tira outro print",
      sq0:"Esquadrão 1", sq1:"Esquadrão 2", sq2:"Esquadrão 3", sq4:"Tem um 4º esquadrão?", goal:"Tua meta antes da S7, ou com o que precisa de ajuda?", review:"Tudo certo?"},
   hint:{name:"Começa a digitar e toca no teu nome.", top:"Toca no ícone de poder ao lado da tua foto de perfil. Tira print da parte de cima do painel.",
-     scroll:"Desce no mesmo painel até ver Unidades, Tecnologia e Overlord.", sq:"Abre o Esquadrão {n} e segue os exemplos: botão azul de baixo e depois o botão de detalhes. Tira print dessa tela. A tela do esquadrão também serve.",
+     scroll:"Desce no mesmo painel até ver Unidades, Tecnologia e Overlord.", sq:"Abre o Esquadrão {n} e segue os exemplos: botão azul de baixo e depois o botão de detalhes. Tira print dessa tela.",
      sq4:"Só marca, não precisa de print.", goal:"Pode ser curto. A liderança lê todas as respostas.", review:"Confere teus números e envia."},
   ex:{route:"Toca aqui", top:"Topo do painel", scroll:"Mais abaixo", squad:"Teu esquadrão", preset:"1. Toca aqui", details:"2. Depois aqui", lineup:"3. Print disso"},
   upload:"Enviar print", again:"Usar outro print", reading:"Lendo teus números…", manual:"Digitar eu mesmo",
@@ -317,6 +341,7 @@ pt:{
      notlisted:"Não tá na nossa lista. Confere a escrita, ou toca Beleza de novo pra enviar assim mesmo.", squad:"O poder do esquadrão tá estranho. Escreve tipo 62.28"},
   sending:"Enviando…", fail:"Não foi. Tenta de novo?",
   done:"Recebido, valeu! 🙌", doneSub:"Até o mês que vem. Continua crescendo!",
+  style:{title:"Como tu joga", fights:"Lutas", front:"Linha de frente", support:"Suporte", wallet:"Carteira", wOpts:["F2P","Às vezes","Compro"], private:"Prefiro não dizer", tips:"Dicas?", tOpts:["Sim, por favor","Não, já sei o caminho","Sou o Smoorf"], err:"Escolhe uma em cada"}, mythic:"Equipamento mítico",
   fallDone:"Continua crescendo, não seja fazendeiro igual o Yero.", fallDoneSub:"E por favor divide esse buff com o Archie"
 },
 ko:{
@@ -324,7 +349,7 @@ ko:{
   q:{name:"게임 닉네임이 뭐야?", top:"전투력 상세 화면을 캡처해 줘", scroll:"이제 아래로 내려서 한 번 더 캡처해 줘",
      sq0:"1부대", sq1:"2부대", sq2:"3부대", sq4:"4부대 있어?", goal:"S7 전까지 목표, 또는 도움이 필요한 부분은?", review:"다 맞아?"},
   hint:{name:"입력하다가 네 이름을 눌러 줘.", top:"프로필 사진 옆 전투력 아이콘을 눌러. 패널 위쪽을 캡처해 줘.",
-     scroll:"같은 패널을 유닛, 기술, 오버로드가 보일 때까지 내려 줘.", sq:"{n}부대를 열고 예시처럼 아래 파란 버튼, 그다음 상세 보기 버튼을 눌러. 그 화면을 캡처해 줘. 부대 화면 캡처도 괜찮아.",
+     scroll:"같은 패널을 유닛, 기술, 오버로드가 보일 때까지 내려 줘.", sq:"{n}부대를 열고 예시처럼 아래 파란 버튼, 그다음 상세 보기 버튼을 눌러. 그 화면을 캡처해 줘.",
      sq4:"체크만 하면 돼, 캡처는 필요 없어.", goal:"짧아도 괜찮아. 운영진이 전부 읽어.", review:"숫자 확인하고 보내 줘."},
   ex:{route:"여기 눌러", top:"패널 위쪽", scroll:"아래로 내린 화면", squad:"네 부대", preset:"1. 여기 눌러", details:"2. 그다음 여기", lineup:"3. 이 화면 캡처"},
   upload:"캡처 올리기", again:"다른 캡처 쓰기", reading:"숫자 읽는 중…", manual:"직접 입력할게",
@@ -341,6 +366,7 @@ ko:{
      notlisted:"명단에 없는 이름이야. 철자를 확인하거나, 그대로 보내려면 확인을 한 번 더 눌러.", squad:"부대 전투력이 이상해 보여. 62.28처럼 입력해 줘"},
   sending:"보내는 중…", fail:"전송 실패. 다시 해볼래?",
   done:"접수 완료, 고마워 🙌", doneSub:"다음 달에 봐. 계속 성장하자!",
+  style:{title:"플레이 스타일", fights:"전투", front:"최전방", support:"지원", wallet:"지갑", wOpts:["무과금","가끔 과금","과금러"], private:"말하기 싫어", tips:"팁 받을래?", tOpts:["응, 부탁해","아니, 내가 알아서 할게","난 Smoorf야"], err:"각 항목에서 하나씩 골라 줘"}, mythic:"신화 장비",
   fallDone:"계속 성장해, Yero처럼 농부 되지 말고.", fallDoneSub:"그리고 그 버프는 Archie랑 꼭 나눠 줘"
 }
 };
@@ -449,18 +475,21 @@ const $app = document.getElementById("app");
 const $top = document.getElementById("top");
 
 /* ============================ SCREENSHOT READER ============================ */
-async function shrink(file){
+async function shrink(file, opt = {}){
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
-    const w = Math.min(800, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
+    // optional vertical crop (fractions of the height), e.g. the Lineup Details popup sits in the middle
+    const y0 = Math.round(img.naturalHeight * (opt.top || 0)), y1 = Math.round(img.naturalHeight * (1 - (opt.bottom || 0)));
+    const sh = y1 - y0, w = Math.min(opt.maxW || 800, img.naturalWidth), h = Math.round(sh * w / img.naturalWidth);
     const c = document.createElement("canvas"); c.width = w; c.height = h;
-    c.getContext("2d").drawImage(img, 0, 0, w, h);
-    return c.toDataURL("image/jpeg", 0.8);
+    c.getContext("2d").drawImage(img, 0, y0, img.naturalWidth, sh, 0, 0, w, h);
+    return c.toDataURL("image/jpeg", opt.q || 0.8);
   } finally { URL.revokeObjectURL(url); }
 }
 async function readShot(kind, file){
-  const image = await shrink(file);
+  // Lineup Details popup sits in the middle: trim the top and bottom bars so the icons arrive sharper
+  const image = await shrink(file, kind === "squad" ? {top:0.11, bottom:0.11, maxW:1170, q:0.85} : {});
   const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 40000);
   try {
     const r = await fetch(READER, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({kind, image}), signal:ctl.signal});
@@ -471,7 +500,8 @@ async function readShot(kind, file){
 const posInt = v => (typeof v === "number" && isFinite(v) && v >= 0) ? Math.round(v) : (typeof v === "string" ? parseFull(v) : null);
 
 /* ============================ MEMBER FORM ============================ */
-const STEPS = ["name","top","scroll","sq0","sq1","sq2","sq4","goal","review"];
+const STEPS = ["name","top","scroll","sq0","sq1","sq2","sq4","style","goal","review"];
+const WALLETS = ["f2p","sometimes","buyer"], TIPS = ["yes","nah","smoorf"];
 const FIELDS_TOP = ["thp","gear","exWeapon","heroSkill","drone"];
 const FIELDS_SCROLL = ["unit","tech","overlord"];
 const TYPES = ["tank","air","missile","tank41","air41","missile41","mix"];
@@ -480,8 +510,8 @@ const blankA = () => ({
   name:"", key:null,
   v:{thp:null,gear:null,exWeapon:null,heroSkill:null,drone:null,unit:null,tech:null,overlord:null,total:null,building:null,tactics:null},
   heroParts:null, st:{top:"idle", scroll:"idle"},
-  squads:[0,1,2].map(() => ({power:null, type:null, read:"idle", seen:null})),
-  squad4:null, goal:""
+  squads:[0,1,2].map(() => ({power:null, type:null, mythic:null, read:"idle", seen:null})),
+  squad4:null, fight:null, wallet:null, tips:null, goal:""
 });
 const S = { i:0, dir:1, roster:[], a:blankA(), sending:false, notListedOk:false };
 
@@ -587,8 +617,8 @@ function render(){
       if (q.read === "idle") { extra = `<button class="link" id="man">${esc(T.manual)}</button>`; showBtn = false; }
       else {
         if (q.read === "fail") body += `<div class="note warn">${esc(T.readFail)}</div>`;
-        if (q.seen && q.seen !== n + 1) body += `<div class="note warn">${esc(T.wrongSquad.replace("{n}", q.seen))}</div>`;
-        body += `<div class="vals"><div class="vrow"><label for="sqp">${esc(T.f.power)}</label><input id="sqp" inputmode="decimal" autocomplete="off" value="${q.power != null ? esc((q.power/1e6).toFixed(2)) + "M" : ""}" placeholder="62.28M"></div></div>
+        body += `<div class="vals"><div class="vrow"><label for="sqp">${esc(T.f.power)}</label><input id="sqp" inputmode="decimal" autocomplete="off" value="${q.power != null ? esc((q.power/1e6).toFixed(2)) + "M" : ""}" placeholder="62.28M"></div>
+          <div class="vrow"><label for="sqm">${esc(T.mythic)}</label><span class="mfield"><input id="sqm" inputmode="numeric" autocomplete="off" maxlength="2" value="${q.mythic != null ? q.mythic : ""}" placeholder="0"><b>/20</b></span></div></div>
           <div class="tlabel">${esc(T.typeQ)}</div>
           <div class="types">${TYPES.map(t => `<button class="sug ${q.type === t ? "on" : ""}" data-type="${t}">${esc(T.types[t])}</button>`).join("")}</div>`;
       }
@@ -598,6 +628,17 @@ function render(){
     body = `<div class="opts">${["yes","no"].map((k,j) => `<button class="opt ${a.squad4 === (k === "yes") ? "sel" : ""}" data-s4="${k}">${esc(T.yesNo[j])}${TICK}</button>`).join("")}</div>`;
     showBtn = false;
   }
+  if (id === "style") {
+    const st = T.style, priv = a.wallet === "private";
+    body = `<div class="srow"><div class="slabel">${esc(st.fights)}</div>
+        <div class="fight"><span>⚔️</span>${[1,2,3,4,5].map(v => `<button class="dot ${a.fight === v ? "on" : ""}" data-fight="${v}" aria-label="${v}"></button>`).join("")}<span>🛡️</span></div>
+        <div class="ends"><span>${esc(st.front)}</span><span>${esc(st.support)}</span></div></div>
+      <div class="srow"><div class="slabel">${esc(st.wallet)}</div>
+        <div class="seg3 ${priv ? "off" : ""}">${WALLETS.map((w,j) => `<button data-wallet="${w}" class="${a.wallet === w ? "on" : ""}">${esc(st.wOpts[j])}</button>`).join("")}</div>
+        <button class="tickrow ${priv ? "on" : ""}" id="priv"><span class="box"></span>${esc(st.private)}</button></div>
+      <div class="srow"><div class="slabel">${esc(st.tips)}</div>
+        <div class="radios">${TIPS.map((t,j) => `<button data-tips="${t}" class="${a.tips === t ? "on" : ""}"><span class="rd"></span>${esc(st.tOpts[j])}</button>`).join("")}</div></div>`;
+  }
   if (id === "goal") {
     body = `<div class="field"><textarea class="inp" id="gl" maxlength="600" placeholder="${esc(T.ph.goal)}">${esc(a.goal)}</textarea></div>`;
   }
@@ -605,8 +646,11 @@ function render(){
     const rows = [
       [T.rv.name, a.name],
       ...FIELDS_TOP.concat(FIELDS_SCROLL).map(k => [T.f[k], fmtN(a.v[k])]),
-      ...a.squads.map((q,n) => [T.rv.squad.replace("{n}", n+1), `${fmtM(q.power)} · ${T.types[q.type] || "?"}`]),
+      ...a.squads.map((q,n) => [T.rv.squad.replace("{n}", n+1), `${fmtM(q.power)} · ${T.types[q.type] || "?"} · ${q.mythic ?? 0}/20`]),
       [T.rv.sq4, a.squad4 ? T.yesNo[0] : T.yesNo[1]],
+      [T.style.fights, `${a.fight}/5 · ${a.fight <= 2 ? T.style.front : a.fight >= 4 ? T.style.support : T.style.front + " + " + T.style.support}`],
+      [T.style.wallet, a.wallet === "private" ? T.style.private : T.style.wOpts[WALLETS.indexOf(a.wallet)]],
+      [T.style.tips, T.style.tOpts[TIPS.indexOf(a.tips)]],
       [T.rv.goal, a.goal]
     ];
     body = `<div class="rev">${rows.map(([k,v]) => `<div class="rrow"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("")}</div>`;
@@ -616,7 +660,7 @@ function render(){
   const hint = id.startsWith("sq") && id !== "sq4" ? T.hint.sq.replace("{n}", Number(id[2]) + 1) : T.hint[id];
   $app.innerHTML = `<main><section class="step ${anim}" id="stp">
     <div class="num">${S.i+1} / ${STEPS.length}</div>
-    <h1>${esc(T.q[id])}</h1>
+    <h1>${esc(id === "style" ? T.style.title : T.q[id])}</h1>
     ${hint ? `<p class="hint">${esc(hint)}</p>` : ""}
     ${body}
     <div class="err" id="er" role="alert"></div>
@@ -697,8 +741,8 @@ function wire(id){
       try {
         const r = await readShot("squad", file);
         const p = posInt(r.power); if (p != null && p > 0) q.power = p;
-        q.seen = posInt(r.squad_no) || null;
         const t = typeOf(Array.isArray(r.types) ? r.types : []); if (t) q.type = t;
+        const m = posInt(r.mythic); if (m != null && m <= 20) q.mythic = m;
         q.read = (q.power != null && q.type) ? "done" : "fail";
       } catch(_) { q.read = "fail"; }
       saveDraft(); render();
@@ -706,6 +750,8 @@ function wire(id){
     if (man) man.onclick = () => { q.read = "manual"; saveDraft(); render(); };
     const sqp = document.getElementById("sqp");
     if (sqp) sqp.addEventListener("input", () => { const v = parseSquad(sqp.value); q.power = (v == null || isNaN(v)) ? null : v; saveDraft(); });
+    const sqm = document.getElementById("sqm");
+    if (sqm) sqm.addEventListener("input", () => { const v = parseFull(sqm.value); q.mythic = (v == null || v > 20) ? null : v; saveDraft(); });
     $app.querySelectorAll("[data-type]").forEach(b => b.onclick = () => {
       q.type = b.dataset.type; saveDraft();
       $app.querySelectorAll("[data-type]").forEach(x => x.classList.toggle("on", x === b));
@@ -718,6 +764,14 @@ function wire(id){
       $app.querySelectorAll("[data-s4]").forEach(x => x.classList.toggle("sel", x === b));
       saveDraft(); setTimeout(() => go(S.i + 1, 1), 260);
     });
+  }
+
+  if (id === "style") {
+    const redraw = () => { saveDraft(); S.dir = 0; render(); };
+    $app.querySelectorAll("[data-fight]").forEach(b => b.onclick = () => { a.fight = Number(b.dataset.fight); redraw(); });
+    $app.querySelectorAll("[data-wallet]").forEach(b => b.onclick = () => { a.wallet = b.dataset.wallet; redraw(); });
+    document.getElementById("priv").onclick = () => { a.wallet = a.wallet === "private" ? null : "private"; redraw(); };
+    $app.querySelectorAll("[data-tips]").forEach(b => b.onclick = () => { a.tips = b.dataset.tips; redraw(); });
   }
 
   if (id === "goal") {
@@ -749,7 +803,9 @@ function next(){
     const q = a.squads[Number(id[2])];
     if (q.power == null || q.power < 1e6 || q.power > 1e9) return fail(T.e.squad);
     if (!q.type) return fail(T.e.type);
+    if (q.mythic == null) q.mythic = 0;
   }
+  if (id === "style" && (!a.fight || !a.wallet || !a.tips)) return fail(T.style.err);
   if (id === "goal" && !a.goal.trim()) return fail(T.e.req);
   if (id === "review") return send();
   go(S.i + 1, 1);
@@ -764,8 +820,8 @@ async function send(){
     month: monthOf(new Date()), submittedAt: serverTimestamp(),
     thp: a.v.thp, gear: a.v.gear, exWeapon: a.v.exWeapon, heroSkill: a.v.heroSkill, drone: a.v.drone,
     unit: a.v.unit, tech: a.v.tech, overlord: a.v.overlord, total: a.v.total ?? null,
-    squads: a.squads.map(q => ({power: q.power, type: q.type})),
-    squad4: !!a.squad4, goal: a.goal.trim().slice(0, 600),
+    squads: a.squads.map(q => ({power: q.power, type: q.type, mythic: q.mythic ?? 0})),
+    squad4: !!a.squad4, fight: a.fight, wallet: a.wallet, tips: a.tips, goal: a.goal.trim().slice(0, 600),
     check: ck === true ? "ok" : ck === false ? "off" : "unknown"
   };
   try {
@@ -917,8 +973,12 @@ function memberHTML(per, rows){
     <div class="sect">What changed</div>
     <div class="kv">${FIELD_ROWS.slice(1).filter(([f]) => cur[f] != null).map(([f,l]) => `<div class="r"><span>${l}</span><b>${fmtM(cur[f])}</b>${prev ? dd(d(cur[f], prev[f])) : `<em></em>`}</div>`).join("")}</div>
     <div class="sect">Squads</div>
-    <div class="kv">${(cur.squads || []).map((q,i) => `<div class="r"><span>Squad ${i+1} · ${esc(T.types[q.type] || "?")}</span><b>${fmtM(q.power)}</b>${prev && prev.squads ? dd(d(q.power, prev.squads[i]?.power)) : `<em></em>`}</div>`).join("")}
+    <div class="kv">${(cur.squads || []).map((q,i) => `<div class="r"><span>Squad ${i+1} · ${esc(T.types[q.type] || "?")}${q.mythic != null ? ` · ${q.mythic}/20 mythic` : ""}</span><b>${fmtM(q.power)}</b>${prev && prev.squads ? dd(d(q.power, prev.squads[i]?.power)) : `<em></em>`}</div>`).join("")}
       <div class="r"><span>4th squad</span><b>${cur.squad4 ? "Yes" : "No"}</b><em></em></div></div>
+    ${cur.fight ? `<div class="sect">Play style</div><div class="kv">
+      <div class="r"><span>Fights</span><b>⚔️ ${"●".repeat(cur.fight - 1)}◉${"●".repeat(5 - cur.fight)} 🛡️</b><em></em></div>
+      <div class="r"><span>Wallet</span><b>${esc(cur.wallet === "private" ? "Rather not say" : TR.en.style.wOpts[WALLETS.indexOf(cur.wallet)] || "–")}</b><em></em></div>
+      <div class="r"><span>Tips</span><b>${esc(TR.en.style.tOpts[TIPS.indexOf(cur.tips)] || "–")}</b><em></em></div></div>` : ""}
     <div class="sect">Goal / help</div><div class="goal">${esc(cur.goal || "–")}</div>`;
   const every = allByKey().get(k) || [], used = usedIds(per);
   const sameMonth = every.filter(e => e.month === cur.month).length;
@@ -1021,12 +1081,12 @@ async function linkEntries(playerName, key){
 
 function exportCSV(){
   const used = usedIds(model());
-  const head = ["month","player","used_on_dashboard","submitted","thp","gear","exclusive_weapon","hero_skill","drone","unit","tech","overlord","total","squad1_power","squad1_type","squad2_power","squad2_type","squad3_power","squad3_type","squad4","goal","check"];
+  const head = ["month","player","used_on_dashboard","submitted","thp","gear","exclusive_weapon","hero_skill","drone","unit","tech","overlord","total","squad1_power","squad1_type","squad1_mythic","squad2_power","squad2_type","squad2_mythic","squad3_power","squad3_type","squad3_mythic","squad4","fight_1front_5support","wallet","tips","goal","check"];
   const q = v => { const s = String(v ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; };
   const nameOf = e => (B.roster.find(r => r.id === e.playerKey) || {}).name || e.player;
   const lines = [...B.entries].sort((a,b) => a.month.localeCompare(b.month) || nameOf(a).localeCompare(nameOf(b))).map(e => [
     e.month, nameOf(e), used.has(e.id) ? "yes" : "no", tsOf(e) ? new Date(tsOf(e)).toISOString() : "", e.thp, e.gear, e.exWeapon, e.heroSkill, e.drone, e.unit, e.tech, e.overlord, e.total,
-    ...[0,1,2].flatMap(i => [e.squads?.[i]?.power, e.squads?.[i]?.type]), e.squad4 ? "yes" : "no", e.goal, e.check
+    ...[0,1,2].flatMap(i => [e.squads?.[i]?.power, e.squads?.[i]?.type, e.squads?.[i]?.mythic]), e.squad4 ? "yes" : "no", e.fight, e.wallet, e.tips, e.goal, e.check
   ].map(q).join(","));
   const blob = new Blob(["﻿" + [head.join(","), ...lines].join("\n")], {type:"text/csv;charset=utf-8"});
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `onda-power-${monthOf(new Date())}.csv`;
